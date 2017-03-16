@@ -15,6 +15,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MakeAdventure" />
+        <activity android:name=".AdventureList" />
+        <activity android:name=".ViewAdventureEntry"></activity>
     </application>
 
 </manifest>
