@@ -1,10 +1,13 @@
 package uk.ac.tees.p4136175.scrapbook;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +15,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,8 +27,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Calendar;
+import android.view.Menu;
+
 
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
@@ -37,8 +48,12 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     private Uri mImageCaptureUri;
     private ImageView mImageView;
 
+
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
+
+    private final int SELECT_PHOTO = 1;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -61,6 +76,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         date = (TextView) findViewById(R.id.dateText);
         location = (TextView) findViewById(R.id.locationText);
 
+        mImageView = (ImageView) findViewById(R.id.imageView);
+
         _Adventure_Id =0;
         Intent intent = getIntent();
         _Adventure_Id =intent.getIntExtra("adventure_Id", 0);
@@ -72,82 +89,105 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             makeEntry.setText(String.valueOf(adv.note_text));
         }
 
+        if(adv.image != null){
+            mImageView.setImageBitmap(getImage(adv.image));
+        }
+
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df  = new SimpleDateFormat("dd MMM yyyy");
         formattedDate = df.format(c.getTime());
 
         date.setText(formattedDate);
 
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        // Image Stuff
-        final String [] items           = new String [] {"From Camera", "From Files"};
-        ArrayAdapter<String> adapter  = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
-        AlertDialog.Builder builder     = new AlertDialog.Builder(this);
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-        builder.setTitle("Select Image");
-        builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
-            public void onClick( DialogInterface dialog, int item ) {
-                if (item == 0) {
-                    Intent intent    = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File file        = new File(Environment.getExternalStorageDirectory(),
-                            "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
-                    mImageCaptureUri = Uri.fromFile(file);
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
 
-                    try {
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                        intent.putExtra("return-data", true);
+            } else {
 
-                        startActivityForResult(intent, PICK_FROM_CAMERA);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                // No explanation needed, we can request the permission.
 
-                    dialog.cancel();
-                } else {
-                    Intent intent = new Intent();
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-
-                    startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
-                }
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
             }
-        } );
+        }
 
-        final AlertDialog dialog = builder.create();
+        Button pickImage = (Button) findViewById(R.id.imageButton);
+        pickImage.setOnClickListener(new View.OnClickListener() {
 
-        mImageView = (ImageView) findViewById(R.id.imageView);
-
-        ((Button) findViewById(R.id.imageButton)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                dialog.show();
+            public void onClick(View view) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
             }
         });
+
+
+
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK) return;
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-        Bitmap bitmap   = null;
-        String path     = "";
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
 
-        if (requestCode == PICK_FROM_FILE) {
-            mImageCaptureUri = data.getData();
-            path = getRealPathFromURI(mImageCaptureUri); //from Gallery
+                } else {
 
-            if (path == null)
-                path = mImageCaptureUri.getPath(); //from File Manager
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
 
-            if (path != null)
-                bitmap  = BitmapFactory.decodeFile(path);
-        } else {
-            path    = mImageCaptureUri.getPath();
-            bitmap  = BitmapFactory.decodeFile(path);
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
+    }
 
-        mImageView.setImageBitmap(bitmap);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+            case SELECT_PHOTO:
+                if(resultCode == RESULT_OK){
+                    final Uri imageUri = imageReturnedIntent.getData();
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getContentResolver().openInputStream(imageUri);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    mImageView.setImageBitmap(selectedImage);
+
+                }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
     }
 
     public String getRealPathFromURI(Uri contentUri) {
@@ -170,7 +210,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             AdventureEntry adv = new AdventureEntry();
             adv.ID = _Adventure_Id;
             adv.note_text = makeEntry.getText().toString();
-            adv.image = "tester";
+
+            Bitmap image = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+            adv.image = getBytes(image);
             adv.datetime = formattedDate;
             adv.loc_lang = "tester";
             adv.loc_lat = "tester";
@@ -191,4 +233,17 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             finish();
         }
     }
+
+    // This converts from bitmap to byte array
+    public static byte[] getBytes(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    // This converts from byte array to bitmap
+    public static Bitmap getImage(byte[] image){
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
 }

@@ -19,7 +19,7 @@ public class AdventureEntry {
     // property help us to keep data
     public int ID;
     public String note_text;
-    public String image;
+    public byte[] image;
     public String datetime;
     public String loc_lang;
     public String loc_lat;

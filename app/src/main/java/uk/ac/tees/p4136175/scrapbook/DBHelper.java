@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String CREATE_TABLE_JOURNAL = "CREATE TABLE " + AdventureEntry.TABLE  + "("
                 + AdventureEntry.KEY_ID  + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
                 + AdventureEntry.KEY_note + " TEXT, "
-                + AdventureEntry.KEY_image + " TEXT, "
+                + AdventureEntry.KEY_image + " BLOB, "
                 + AdventureEntry.KEY_datetime + " REAL, "
                 + AdventureEntry.KEY_loc_long + " REAL, "
                 + AdventureEntry.KEY_loc_lat + " REAL )";

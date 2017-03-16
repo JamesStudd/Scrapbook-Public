@@ -118,7 +118,7 @@ public class AdventureRepo {
                 aEntry.note_text = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note));
                 System.out.println("note text: " + aEntry.note_text);
 
-                aEntry.image  = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_image));
+                aEntry.image  = cursor.getBlob(cursor.getColumnIndex(AdventureEntry.KEY_image));
                 System.out.println("image: " + aEntry.image);
 
                 aEntry.datetime = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_datetime));
