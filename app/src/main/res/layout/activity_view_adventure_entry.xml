@@ -11,23 +11,29 @@
     tools:context="uk.ac.tees.p4136175.scrapbook.ViewAdventureEntry">
 
     <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="131dp"
-        android:layout_marginStart="131dp"
+        android:visibility="gone"
         android:id="@+id/adventure_Id" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/adventure_Id"
-        android:layout_alignLeft="@+id/adventure_Id"
-        android:layout_alignStart="@+id/adventure_Id"
-        android:layout_marginTop="13dp"
-        android:id="@+id/adventure_note" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/adventure_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            />
+
+        <TextView
+            android:id="@+id/adventure_datetime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            />
+    </LinearLayout>
+
 </RelativeLayout>

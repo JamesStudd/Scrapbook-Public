@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class AdventureList extends ListActivity implements View.OnClickListener{
 
     Button backBtn, refreshBtn;
-    TextView adventure_Id;
+    TextView adventure_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +36,21 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
 
     private void refreshList(){
         AdventureRepo repo = new AdventureRepo(this);
-        System.out.println(repo);
         ArrayList<HashMap<String, String>> adventureList =  repo.getAdventureEntryList();
-        System.out.println(adventureList.size());
         if(adventureList.size()!=0) {
             ListView lv = getListView();
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    adventure_Id = (TextView) view.findViewById(R.id.adventure_Id);
-                    String adventureId = adventure_Id.getText().toString();
+                    adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
+                    String adventureId = adventure_id.getText().toString();
+                    System.out.println("The adventure id : " + adventureId);
                     Intent objIndent = new Intent(getApplicationContext(),MakeAdventure.class);
                     objIndent.putExtra("adventure_Id", Integer.parseInt( adventureId));
                     startActivity(objIndent);
                 }
             });
-            ListAdapter adapter = new SimpleAdapter( AdventureList.this,adventureList, R.layout.activity_view_adventure_entry, new String[] { "id","note_text"}, new int[] {R.id.adventure_Id, R.id.adventure_note});
+            ListAdapter adapter = new SimpleAdapter( AdventureList.this,adventureList, R.layout.activity_view_adventure_entry, new String[] { "id","note_text","datetime"}, new int[] {R.id.adventure_Id, R.id.adventure_note, R.id.adventure_datetime});
             setListAdapter(adapter);
         }else{
             Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();

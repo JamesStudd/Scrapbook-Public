@@ -38,5 +38,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:id="@android:id/list"/>
+        android:id="@android:id/list"
+        android:layout_above="@+id/backButton" />
 </RelativeLayout>

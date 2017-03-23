@@ -26,10 +26,22 @@
         android:text="List"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/addButton"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="39dp"
-        android:layout_marginEnd="39dp"
-        android:id="@+id/listButton" />
+        android:id="@+id/listButton"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_alignBaseline="@+id/addButton"
+        android:layout_alignBottom="@+id/addButton"
+        android:layout_toRightOf="@+id/addButton"
+        android:layout_toEndOf="@+id/addButton" />
+
+    <Button
+        android:text="LIst2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/listButton"
+        android:layout_toRightOf="@+id/listButton"
+        android:layout_toEndOf="@+id/listButton"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:id="@+id/listGridButton" />
 </RelativeLayout>

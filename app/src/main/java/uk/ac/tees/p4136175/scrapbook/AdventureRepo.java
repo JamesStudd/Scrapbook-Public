@@ -78,7 +78,14 @@ public class AdventureRepo {
             do {
                 HashMap<String, String> adventureEntry = new HashMap<String, String>();
                 adventureEntry.put("id", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_ID)));
-                adventureEntry.put("note_text", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note)));
+                String temp = "";
+                if (cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note)).length() > 50){
+                    temp = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note)).substring(0, 50) + "...";
+                } else {
+                    temp = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note));
+                }
+                adventureEntry.put("note_text", temp);
+                adventureEntry.put("datetime", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_datetime)));
                 adventureEntryList.add(adventureEntry);
 
             } while (cursor.moveToNext());
@@ -88,6 +95,11 @@ public class AdventureRepo {
         db.close();
         return adventureEntryList;
 
+    }
+
+    private String getLocation(int loc_lang, int loc_lat){
+        // Will eventually take the loc_lang and loc_lat and return an approximate location
+        return "";
     }
 
     public AdventureEntry getAdventureById(int Id){
