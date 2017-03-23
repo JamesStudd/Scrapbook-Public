@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -95,6 +96,38 @@ public class AdventureRepo {
         db.close();
         return adventureEntryList;
 
+    }
+
+    public ArrayList<HashMap<String, Object>> getAdventureEntryGrid() {
+        //Open connection to read only
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery =  "SELECT  " +
+                AdventureEntry.KEY_ID + "," +
+                AdventureEntry.KEY_note + "," +
+                AdventureEntry.KEY_image + "," +
+                AdventureEntry.KEY_datetime + "," +
+                AdventureEntry.KEY_loc_long + "," +
+                AdventureEntry.KEY_loc_lat +
+                " FROM " + AdventureEntry.TABLE;
+
+        ArrayList<HashMap<String, Object>> adventureEntryGrid = new ArrayList<HashMap<String, Object>>();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, Object> adventureEntry = new HashMap<String, Object>();
+                adventureEntry.put("id", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_ID)));
+                adventureEntry.put("datetime", cursor.getBlob(cursor.getColumnIndex(AdventureEntry.KEY_image)));
+                adventureEntryGrid.add(adventureEntry);
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return adventureEntryGrid;
     }
 
     private String getLocation(int loc_lang, int loc_lat){
