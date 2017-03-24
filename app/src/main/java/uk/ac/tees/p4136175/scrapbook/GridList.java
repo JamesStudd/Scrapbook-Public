@@ -2,6 +2,7 @@ package uk.ac.tees.p4136175.scrapbook;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,10 +17,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GridList extends ListActivity implements View.OnClickListener {
+public class GridList extends AppCompatActivity implements View.OnClickListener {
 
     Button backBtn, refreshBtn;
     TextView adventure_id;
+    ImageAdapter ia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class GridList extends ListActivity implements View.OnClickListener {
         refreshBtn = (Button) findViewById(R.id.refreshButton);
         refreshBtn.setOnClickListener(this);
 
+        ia = new ImageAdapter(this);
+
         refreshList();
 
     }
@@ -41,8 +44,8 @@ public class GridList extends ListActivity implements View.OnClickListener {
         AdventureRepo repo = new AdventureRepo(this);
         ArrayList<HashMap<String, Object>> adventureList =  repo.getAdventureEntryGrid();
         if(adventureList.size()!=0) {
-            ListView lv = getListView();
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            GridView gv = (GridView) findViewById(R.id.gridView);
+            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
@@ -52,8 +55,7 @@ public class GridList extends ListActivity implements View.OnClickListener {
                     startActivity(objIndent);
                 }
             });
-            ListAdapter adapter = new SimpleAdapter( GridList.this,adventureList, R.layout.activity_view_adventure_entry, new String[] { "id","note_text","datetime"}, new int[] {R.id.adventure_Id, R.id.adventure_note, R.id.adventure_datetime});
-            setListAdapter(adapter);
+            gv.setAdapter(ia);
         }else{
             Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
         }
@@ -61,6 +63,14 @@ public class GridList extends ListActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if (v == findViewById(R.id.backButton)){
+            finish();
+        } else {
+            refreshList();
+        }
+    }
 
+    public ImageAdapter getImageAdapater(){
+        return ia;
     }
 }

@@ -35,9 +35,8 @@
 
     <GridView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/backButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="800px"
+        android:id="@+id/gridView"
+        android:numColumns="3" />
 
 </RelativeLayout>

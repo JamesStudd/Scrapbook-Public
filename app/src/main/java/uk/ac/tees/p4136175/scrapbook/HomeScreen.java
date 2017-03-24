@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class HomeScreen extends AppCompatActivity implements android.view.View.OnClickListener{
 
-    Button btnAdd, btnList;
+    Button btnAdd, btnList, btnGrid;
     final Context context = this;
 
     @Override
@@ -23,6 +23,8 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         btnList = (Button) findViewById(R.id.listButton);
         btnList.setOnClickListener(this);
 
+        btnGrid = (Button) findViewById(R.id.listGridButton);
+        btnGrid.setOnClickListener(this);
     }
 
     @Override
@@ -32,6 +34,9 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             startActivity(intent);
         } else if (v == findViewById(R.id.listButton)){
             Intent intent = new Intent(context, AdventureList.class);
+            startActivity(intent);
+        } else if (v == findViewById(R.id.listGridButton)){
+            Intent intent = new Intent(context, GridList.class);
             startActivity(intent);
         }
     }
