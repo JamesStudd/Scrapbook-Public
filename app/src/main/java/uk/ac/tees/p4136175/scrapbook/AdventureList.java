@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
 
     Button backBtn, refreshBtn;
     TextView adventure_id;
+    Switch changeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
 
         refreshBtn = (Button) findViewById(R.id.refreshButton);
         refreshBtn.setOnClickListener(this);
+
+        changeView = (Switch) findViewById(R.id.switch1);
 
         refreshList();
     }
