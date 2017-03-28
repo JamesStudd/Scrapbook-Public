@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -21,6 +22,7 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
     Button backBtn, refreshBtn;
     TextView adventure_id;
     Switch changeView;
+    ImageAdapter ia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,31 +36,56 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
         refreshBtn.setOnClickListener(this);
 
         changeView = (Switch) findViewById(R.id.switch1);
+        ia = new ImageAdapter(this);
 
         refreshList();
     }
 
     private void refreshList(){
         AdventureRepo repo = new AdventureRepo(this);
-        ArrayList<HashMap<String, String>> adventureList =  repo.getAdventureEntryList();
-        if(adventureList.size()!=0) {
-            ListView lv = getListView();
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
-                    String adventureId = adventure_id.getText().toString();
-                    System.out.println("The adventure id : " + adventureId);
-                    Intent objIndent = new Intent(getApplicationContext(),MakeAdventure.class);
-                    objIndent.putExtra("adventure_Id", Integer.parseInt( adventureId));
-                    startActivity(objIndent);
-                }
-            });
-            ListAdapter adapter = new SimpleAdapter( AdventureList.this,adventureList, R.layout.activity_view_adventure_entry, new String[] { "id","note_text","datetime"}, new int[] {R.id.adventure_Id, R.id.adventure_note, R.id.adventure_datetime});
-            setListAdapter(adapter);
-        }else{
-            Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
+
+        if(changeView.isChecked()){
+
+            ArrayList<HashMap<String, Object>> adventureList =  repo.getAdventureEntryGrid();
+            if(adventureList.size()!=0) {
+                GridView gv = (GridView) findViewById(R.id.gridView1);
+                gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
+                        String adventureId = adventure_id.getText().toString();
+                        Intent objIndent = new Intent(getApplicationContext(),MakeAdventure.class);
+                        objIndent.putExtra("adventure_Id", Integer.parseInt( adventureId));
+                        startActivity(objIndent);
+                    }
+                });
+                gv.setAdapter(ia);
+            }else{
+                Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            ArrayList<HashMap<String, String>> adventureList =  repo.getAdventureEntryList();
+            if(adventureList.size()!=0) {
+                ListView lv = getListView();
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
+                        String adventureId = adventure_id.getText().toString();
+                        System.out.println("The adventure id : " + adventureId);
+                        Intent objIndent = new Intent(getApplicationContext(),MakeAdventure.class);
+                        objIndent.putExtra("adventure_Id", Integer.parseInt( adventureId));
+                        startActivity(objIndent);
+                    }
+                });
+                ListAdapter adapter = new SimpleAdapter( AdventureList.this,adventureList, R.layout.activity_view_adventure_entry, new String[] { "id","note_text","datetime"}, new int[] {R.id.adventure_Id, R.id.adventure_note, R.id.adventure_datetime});
+                setListAdapter(adapter);
+            }else{
+                Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
+            }
         }
+
+
     }
 
     @Override

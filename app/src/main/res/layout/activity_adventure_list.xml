@@ -65,4 +65,12 @@
         android:layout_toRightOf="@+id/switch1"
         android:layout_toEndOf="@+id/switch1"
         android:id="@+id/textView4" />
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/gridView1" />
 </RelativeLayout>
