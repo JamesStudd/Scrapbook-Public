@@ -119,7 +119,7 @@ public class AdventureRepo {
             do {
                 HashMap<String, Object> adventureEntry = new HashMap<String, Object>();
                 adventureEntry.put("id", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_ID)));
-                adventureEntry.put("datetime", cursor.getBlob(cursor.getColumnIndex(AdventureEntry.KEY_image)));
+                adventureEntry.put("image", cursor.getBlob(cursor.getColumnIndex(AdventureEntry.KEY_image)));
                 adventureEntryGrid.add(adventureEntry);
 
             } while (cursor.moveToNext());

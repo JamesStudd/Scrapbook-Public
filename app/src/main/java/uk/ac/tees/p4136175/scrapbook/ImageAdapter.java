@@ -1,11 +1,17 @@
 package uk.ac.tees.p4136175.scrapbook;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by p4136175 on 24/03/2017.
@@ -13,9 +19,12 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
+    private AdventureRepo adventureRepo;
+    private List<Bitmap> images;
 
-    public ImageAdapter(Context c) {
+    public ImageAdapter(Context c,  AdventureRepo repo) {
         mContext = c;
+        adventureRepo = repo;
     }
 
     public int getCount() {
@@ -39,12 +48,24 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setLayoutParams(new GridView.LayoutParams(300, 300));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(0, 0, 0, 0);
+
         } else {
             imageView = (ImageView) convertView;
         }
 
         imageView.setImageResource(mThumbIds[position]);
         return imageView;
+    }
+
+    public void getImages(){
+        ArrayList<HashMap<String, Object>> adventureList =  adventureRepo.getAdventureEntryGrid();
+        System.out.println("Adventure List : " + adventureList);
+        System.out.println(adventureList.size() + " is the size of the adventure list");
+
+        for (HashMap<String, Object> h : adventureList){
+            System.out.println(h.get("image"));
+        }
+
     }
 
     // references to our images
@@ -54,5 +75,13 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.dogo5, R.drawable.dogo6
 
     };
+
+    public List getImageList(){
+        return images;
+    }
+
+    public static Bitmap getImage(byte[] image){
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
 
 }

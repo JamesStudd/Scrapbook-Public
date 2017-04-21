@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -23,6 +24,11 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
     TextView adventure_id;
     Switch changeView;
     ImageAdapter ia;
+    Boolean switchState = false;
+
+    ListView lv;
+    GridView gv;
+    AdventureRepo repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +42,31 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
         refreshBtn.setOnClickListener(this);
 
         changeView = (Switch) findViewById(R.id.switch1);
-        ia = new ImageAdapter(this);
+        changeView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
+                switchState = changeView.isChecked();
+                refreshList();
+            }
+        });
 
+        repo = new AdventureRepo(this);
+        ia = new ImageAdapter(this, repo);
+        gv = (GridView) findViewById(R.id.gridView1);
         refreshList();
+
+        ia.getImages();
+
+
     }
 
     private void refreshList(){
         AdventureRepo repo = new AdventureRepo(this);
 
-        if(changeView.isChecked()){
-
+        if(switchState){
+            gv.setVisibility(View.VISIBLE);
+            ListView lv = getListView();
+            lv.setVisibility(View.INVISIBLE);
+            Toast.makeText(getApplicationContext(), "Image View Selected", Toast.LENGTH_SHORT).show();
             ArrayList<HashMap<String, Object>> adventureList =  repo.getAdventureEntryGrid();
             if(adventureList.size()!=0) {
                 GridView gv = (GridView) findViewById(R.id.gridView1);
@@ -64,9 +85,12 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
                 Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
             }
         } else {
+            gv.setVisibility(View.INVISIBLE);
+            ListView lv = getListView();
+            lv.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(), "Note View Selected", Toast.LENGTH_SHORT).show();
             ArrayList<HashMap<String, String>> adventureList =  repo.getAdventureEntryList();
             if(adventureList.size()!=0) {
-                ListView lv = getListView();
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,6 +107,7 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
             }else{
                 Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
             }
+
         }
 
 
@@ -92,6 +117,8 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
     public void onClick(View v) {
         if (v == findViewById(R.id.backButton)){
             finish();
+        } else if (v == findViewById(R.id.refreshButton)){
+            refreshList();
         } else {
             refreshList();
         }
