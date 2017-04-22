@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -20,6 +21,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_home_screen);
 
         btnAdd = (Button) findViewById(R.id.addButton);
@@ -66,7 +68,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             btnSearch.animate().translationY(-160).start();
             btnList.animate().translationY(-160).start();
             showHide.animate().translationY(-160).start();
-            btnAdd.animate().translationY(-160).start();
             showHide.setText("Hide");
         }
         menuShow = !menuShow;
