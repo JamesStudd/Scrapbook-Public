@@ -90,7 +90,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         }
 
         if(adv.image != null){
-            System.out.println(adv.image.getClass() + " is the class!!! " + adv.image);
+            System.out.println(adv.image + " is the image");
+            System.out.println(getImage(adv.image));
             mImageView.setImageBitmap(getImage(adv.image));
         }
 

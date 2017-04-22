@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_home_screen"
     android:layout_width="match_parent"
@@ -10,28 +11,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="uk.ac.tees.p4136175.scrapbook.HomeScreen">
 
+
+
     <Button
-        android:text="Add"
+        android:id ="@+id/addButton"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:text="Make Adventure"
+        android:background="@drawable/button_bg_round"
+        android:padding="15dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginLeft="100dp"/>
+
+    <Button
+        android:text="Show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="31dp"
-        android:layout_marginStart="31dp"
-        android:layout_marginBottom="40dp"
-        android:id="@+id/addButton" />
+        android:id="@+id/showHideButton"
+        android:layout_marginTop="440dp"
+        android:layout_marginLeft="132dp"/>
 
     <Button
         android:text="List"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="120px"
         android:id="@+id/listButton"
-        android:layout_alignBaseline="@+id/addButton"
-        android:layout_alignBottom="@+id/addButton"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="64dp"
-        android:layout_marginEnd="64dp" />
+        android:layout_marginTop="490dp"
+        android:layout_marginLeft="180dp"
+        />
+
+    <Button
+        android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_height="120px"
+        android:id="@+id/searchButton"
+        android:layout_marginTop="490dp"
+        android:layout_marginLeft="85dp"/>
+
 
 </RelativeLayout>

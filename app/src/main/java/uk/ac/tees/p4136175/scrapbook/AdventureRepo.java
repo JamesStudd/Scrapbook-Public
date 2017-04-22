@@ -158,22 +158,22 @@ public class AdventureRepo {
             do {
 
                 aEntry.ID =cursor.getInt(cursor.getColumnIndex(AdventureEntry.KEY_ID));
-                System.out.println("id: " + aEntry.ID);
+                //System.out.println("id: " + aEntry.ID);
 
                 aEntry.note_text = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note));
-                System.out.println("note text: " + aEntry.note_text);
+                //System.out.println("note text: " + aEntry.note_text);
 
                 aEntry.image  = cursor.getBlob(cursor.getColumnIndex(AdventureEntry.KEY_image));
-                System.out.println("image: " + aEntry.image);
+                //System.out.println("image: " + aEntry.image);
 
                 aEntry.datetime = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_datetime));
-                System.out.println("datetime: " + aEntry.datetime);
+                //System.out.println("datetime: " + aEntry.datetime);
 
                 aEntry.loc_lat = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_loc_lat));
-                System.out.println("loc lat: " + aEntry.loc_lat);
+                //System.out.println("loc lat: " + aEntry.loc_lat);
 
                 aEntry.loc_lang = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_loc_long));
-                System.out.println("loc lang: " + aEntry.loc_lang);
+                //System.out.println("loc lang: " + aEntry.loc_lang);
 
             } while (cursor.moveToNext());
         }
