@@ -3,6 +3,9 @@
     package="uk.ac.tees.p4136175.scrapbook">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +24,8 @@
         <activity android:name=".AdventureList" />
         <activity android:name=".ViewAdventureEntry" />
         <activity android:name=".ViewGridEntry" />
+
+        <service android:name=".GPS_Service"/>
 
     </application>
 
