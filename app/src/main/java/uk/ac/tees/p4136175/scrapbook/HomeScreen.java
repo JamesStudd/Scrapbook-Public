@@ -9,7 +9,9 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomeScreen extends AppCompatActivity implements android.view.View.OnClickListener{
 
@@ -17,6 +19,8 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     final Context context = this;
     Animation slideUpAnimation, slideDownAnimation;
     boolean menuShow = false;
+    CalendarView cv;
+    boolean calendarShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,23 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         btnSearch = (Button) findViewById(R.id.searchButton);
         btnSearch.setOnClickListener(this);
 
+        cv = (CalendarView) findViewById(R.id.calendarView3);
+        cv.setVisibility(View.INVISIBLE);
+        cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                String[] monthNames = {"Jan","Feb","Mar","Apr","May","June",
+                        "Jul","Aug","Sep","Oct","Nov","Dec"};
+
+                String date = dayOfMonth + " " + monthNames[month] + " " + year;
+                Intent intent = new Intent(context, AdventureList.class);
+                Bundle b = new Bundle();
+                b.putString("date", date);
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+
         slideUpAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_up_animation);
         slideUpAnimation.setFillAfter(true);
         slideDownAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_down_animation);
@@ -53,8 +74,28 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             startActivity(intent);
         } else if (v == findViewById(R.id.showHideButton)){
             startAnimation();
+            if(calendarShown){
+                cv.setVisibility(View.INVISIBLE);
+                btnAdd.animate().scaleX(1f).start();
+                btnAdd.animate().scaleY(1f).start();
+                btnAdd.animate().translationY(0).start();
+                calendarShown = false;
+            }
         } else if (v == findViewById(R.id.searchButton)){
-            // not done yet
+            if(calendarShown){
+                btnAdd.animate().scaleX(1f).start();
+                btnAdd.animate().scaleY(1f).start();
+                btnAdd.animate().translationY(0).start();
+
+                cv.setVisibility(View.INVISIBLE);
+            } else {
+                btnAdd.animate().scaleX(0.5f).start();
+                btnAdd.animate().scaleY(0.5f).start();
+                btnAdd.animate().translationY(-300).start();
+                cv.setVisibility(View.VISIBLE);
+            }
+            calendarShown = !calendarShown;
+
         }
     }
 

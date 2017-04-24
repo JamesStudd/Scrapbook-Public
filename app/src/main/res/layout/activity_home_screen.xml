@@ -9,6 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background_image"
     tools:context="uk.ac.tees.p4136175.scrapbook.HomeScreen">
 
 
@@ -51,6 +52,14 @@
         android:layout_marginTop="540dp"
         android:layout_marginLeft="85dp"
         android:background="#303f9f"/>
+
+    <CalendarView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/calendarView3"
+        android:layout_alignTop="@+id/addButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>
