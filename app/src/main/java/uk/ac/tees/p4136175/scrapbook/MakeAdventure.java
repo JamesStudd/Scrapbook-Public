@@ -280,6 +280,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
             finish();
         } else if (v == findViewById(R.id.cancelButton)){
+            unregisterReceiver(broadcastReceiver);
             finish();
         }
     }
