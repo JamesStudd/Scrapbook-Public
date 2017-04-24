@@ -1,8 +1,11 @@
 package uk.ac.tees.p4136175.scrapbook;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +41,27 @@ import android.view.Menu;
 
 
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
+
+    private BroadcastReceiver broadcastReceiver;
+
+    private void enable_buttons() {
+                Intent i = new Intent(getApplicationContext(),GPS_Service.class);
+                startService(i);
+    }
+
+    private boolean runtime_permissions() {
+        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}
+                    ,100);
+            return true;
+        }
+        return false;
+    }
+
+
+    //----------------------------------------------------------------------------------------------------------------------------------
 
     Button btnSave, btnCancel, btnDelete;
     EditText makeEntry;
@@ -77,6 +102,18 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         location = (TextView) findViewById(R.id.locationText);
 
         mImageView = (ImageView) findViewById(R.id.imageView);
+
+        if(broadcastReceiver == null){
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    location.append("\n" +intent.getExtras().get("coordinates"));
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver, new IntentFilter("location_update"));
 
         _Adventure_Id =0;
         Intent intent = getIntent();
@@ -137,6 +174,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        if(!runtime_permissions())
+            enable_buttons();
+
 
 
     }
@@ -159,6 +199,14 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     // functionality that depends on this permission.
                 }
                 return;
+            }
+
+            case 100: {
+                if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    enable_buttons();
+                } else {
+                    runtime_permissions();
+                }
             }
 
             // other 'case' lines to check for other
