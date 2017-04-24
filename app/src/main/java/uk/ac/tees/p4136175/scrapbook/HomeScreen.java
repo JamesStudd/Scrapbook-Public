@@ -45,7 +45,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                String[] monthNames = {"Jan","Feb","Mar","Apr","May","June",
+                String[] monthNames = {"Jan","Feb","Mar","Apr","May","Jun",
                         "Jul","Aug","Sep","Oct","Nov","Dec"};
 
                 String date = dayOfMonth + " " + monthNames[month] + " " + year;
@@ -73,7 +73,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             Intent intent = new Intent(context, AdventureList.class);
             startActivity(intent);
         } else if (v == findViewById(R.id.showHideButton)){
-            startAnimation();
+            startAnimation("menu");
             if(calendarShown){
                 cv.setVisibility(View.INVISIBLE);
                 btnAdd.animate().scaleX(1f).start();
@@ -82,6 +82,25 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                 calendarShown = false;
             }
         } else if (v == findViewById(R.id.searchButton)){
+            startAnimation("calendar");
+        }
+    }
+
+    public void startAnimation(String animationType){
+        if(animationType == "menu"){
+            if(menuShow) {
+                btnSearch.animate().translationY(0).start();
+                btnList.animate().translationY(0).start();
+                showHide.animate().translationY(0).start();
+                showHide.setText("Show");
+            } else {
+                btnSearch.animate().translationY(-160).start();
+                btnList.animate().translationY(-160).start();
+                showHide.animate().translationY(-160).start();
+                showHide.setText("Hide");
+            }
+            menuShow = !menuShow;
+        } else if (animationType == "calendar"){
             if(calendarShown){
                 btnAdd.animate().scaleX(1f).start();
                 btnAdd.animate().scaleY(1f).start();
@@ -95,23 +114,8 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                 cv.setVisibility(View.VISIBLE);
             }
             calendarShown = !calendarShown;
-
         }
-    }
 
-    public void startAnimation(){
-        if(menuShow) {
-            btnSearch.animate().translationY(0).start();
-            btnList.animate().translationY(0).start();
-            showHide.animate().translationY(0).start();
-            showHide.setText("Show");
-        } else {
-            btnSearch.animate().translationY(-160).start();
-            btnList.animate().translationY(-160).start();
-            showHide.animate().translationY(-160).start();
-            showHide.setText("Hide");
-        }
-        menuShow = !menuShow;
     }
 
 }
