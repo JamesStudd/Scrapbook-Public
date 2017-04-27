@@ -59,19 +59,21 @@ public class ImageAdapter extends BaseAdapter {
 
     public void getImages(){
         ArrayList<HashMap<String, Object>> adventureList =  adventureRepo.getAdventureEntryGrid();
-        for(HashMap<String, Object> h : adventureList){
-            System.out.println(h);
-        }
-
         AdventureEntry adv = new AdventureEntry();
 
-        System.out.println("Adventure List : " + adventureList);
-        System.out.println(adventureList.size() + " is the size of the adventure list");
 
-        for (int i = 1; i <= adventureList.size(); i++){
-            adv = adventureRepo.getAdventureById(i);
+        int[] imageArray = new int[adventureList.size()];
+        int count = 0;
+        for(HashMap<String, Object> h : adventureList){
+            imageArray[count] = Integer.parseInt(String.valueOf(h.get("id")));
+            count++;
+        }
+
+
+        for (int i = 0; i < adventureList.size(); i++){
+            adv = adventureRepo.getAdventureById(imageArray[i]);
             if(adv.image != null){
-                System.out.println(adv.image);
+                System.out.println("image = " + adv.image);
                 //images.add(getImage(adv.image));
             }
         }

@@ -63,13 +63,14 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
 
         Bundle b = getIntent().getExtras();
         if (b!=null){
-            System.out.println(b.getString("date"));
+            //System.out.println(b.getString("date"));
             displayEntriesByDate(b.getString("date"));
         } else {
             refreshList();
         }
 
         ia.getImages();
+        System.out.println(ia.getImageList());
 
 
 
@@ -159,7 +160,7 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
         }
 
         if(adventureListWithCorrectDates.size()!=0) {
-            System.out.println("There is entries");
+            //System.out.println("There is entries");
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -131,6 +131,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             System.out.println(adv.image + " is the image");
             System.out.println(getImage(adv.image));
             mImageView.setImageBitmap(getImage(adv.image));
+        } else {
+            System.out.println("adv image was null.");
         }
 
         Calendar c = Calendar.getInstance();

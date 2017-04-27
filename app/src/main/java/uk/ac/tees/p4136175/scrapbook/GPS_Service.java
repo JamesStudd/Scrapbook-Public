@@ -106,7 +106,7 @@ public class GPS_Service extends Service {
         while(s == null){
             s = apiThread.getFormattedAddress();
         }
-        System.out.println("Formatted Address: " + s);
+        //System.out.println("Formatted Address: " + s);
         return s;
     }
 }

@@ -28,7 +28,6 @@ public class ApiThread implements Runnable {
     public ApiThread(float longi, float lati, String address){
         longi1 = longi;
         lati1 = lati;
-        System.out.println("longitude: " + longi + " latitude: " + lati);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -37,7 +36,7 @@ public class ApiThread implements Runnable {
         try  {
             try {
                 URL url = new URL("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + longi1 + "," + lati1 + "&sensor=false");
-                System.out.println(url);
+                //System.out.println(url);
                 JSONObject json = new JSONObject();
                 String stringToJson="";
 
@@ -55,7 +54,7 @@ public class ApiThread implements Runnable {
                     Logger.getLogger(GPS_Service.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                System.out.println(json);
+                //System.out.println(json);
                 JSONArray j = (JSONArray) json.get("results");
                 JSONObject j2 = (JSONObject) j.get(0);
                 formattedAddress = String.valueOf(j2.get("formatted_address"));
