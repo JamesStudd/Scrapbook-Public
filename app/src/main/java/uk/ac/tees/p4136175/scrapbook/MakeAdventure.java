@@ -42,6 +42,7 @@ import android.view.Menu;
 
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
+    private GPS_Service gps_service;
     private BroadcastReceiver broadcastReceiver;
 
     private void enable_buttons() {
@@ -295,6 +296,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     // This converts from byte array to bitmap
     public static Bitmap getImage(byte[] image){
         return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    public void setFormattedAddress(String formattedAddress){
+        location.setText(formattedAddress);
     }
 
 }

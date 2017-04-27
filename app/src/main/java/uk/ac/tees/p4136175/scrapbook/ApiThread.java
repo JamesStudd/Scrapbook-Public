@@ -3,6 +3,7 @@ package uk.ac.tees.p4136175.scrapbook;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -22,8 +23,9 @@ import java.util.logging.Logger;
 public class ApiThread implements Runnable {
 
     private float longi1, lati1;
+    String formattedAddress;
 
-    public ApiThread(float longi, float lati){
+    public ApiThread(float longi, float lati, String address){
         longi1 = longi;
         lati1 = lati;
         System.out.println("longitude: " + longi + " latitude: " + lati);
@@ -37,23 +39,28 @@ public class ApiThread implements Runnable {
                 URL url = new URL("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + longi1 + "," + lati1 + "&sensor=false");
                 System.out.println(url);
                 JSONObject json = new JSONObject();
+                String stringToJson="";
 
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
                     JSONParser parser = new JSONParser();
                     for (String line; (line = reader.readLine()) != null;) {
-                        System.out.println(line);
+                        //System.out.println(line);
+                        stringToJson+=line;
 
-                        json = (JSONObject) parser.parse(line);
+                        //json = (JSONObject) parser.parse(line);
                     }
+
+                    json = (JSONObject) parser.parse(stringToJson);
                 } catch (IOException ex) {
                     Logger.getLogger(GPS_Service.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 System.out.println(json);
-                JSONObject j = (JSONObject) json.get("results");
-                System.out.println(j);
-                String s = String.valueOf(j.get("formatted_address"));
-                System.out.println(s);
+                JSONArray j = (JSONArray) json.get("results");
+                JSONObject j2 = (JSONObject) j.get(0);
+                formattedAddress = String.valueOf(j2.get("formatted_address"));
+                //String s = String.valueOf(j.get("formatted_address"));
+                //System.out.println(s);
 
 
             } catch (MalformedURLException ex) {
@@ -63,5 +70,9 @@ public class ApiThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getFormattedAddress(){
+        return formattedAddress;
     }
 }

@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.telecom.Call;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -23,6 +24,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +58,7 @@ public class GPS_Service extends Service {
                 locationName(53.3f, -0.7f);
 
                 Intent i = new Intent("location_update");
-                i.putExtra("coordinates",location.getLongitude()+" "+location.getLatitude());
+                i.putExtra("coordinates", location.getLongitude() + " " + location.getLatitude());
                 sendBroadcast(i);
 
             }
@@ -79,25 +84,29 @@ public class GPS_Service extends Service {
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         //noinspection MissingPermission
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3000,0,listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, listener);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(locationManager != null ) {
+        if (locationManager != null) {
             locationManager.removeUpdates(listener);
         }
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private String locationName(float longi, float lati) {
+    public String locationName(float longi, float lati) {
 
-        Runnable r = new ApiThread(longi, lati);
-        new Thread(r).start();
-        return "";
+        ApiThread apiThread = new ApiThread(longi, lati, "");
+        new Thread(apiThread).start();
 
-
+        String s = null;
+        while(s == null){
+            s = apiThread.getFormattedAddress();
+        }
+        System.out.println("Formatted Address: " + s);
+        return s;
     }
 }
