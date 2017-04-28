@@ -40,6 +40,7 @@ public class GPS_Service extends Service {
 
     private LocationListener listener;
     private LocationManager locationManager;
+    private MakeAdventure makeAdventure;
 
     @Nullable
     @Override
@@ -55,7 +56,7 @@ public class GPS_Service extends Service {
             @Override
             public void onLocationChanged(Location location) {
 
-                locationName(53.3f, -0.7f);
+                LocationHelper.getlInstance().currentLocation = locationName(54.569773f, -1.235619f);
 
                 Intent i = new Intent("location_update");
                 i.putExtra("coordinates", location.getLongitude() + " " + location.getLatitude());
@@ -106,7 +107,7 @@ public class GPS_Service extends Service {
         while(s == null){
             s = apiThread.getFormattedAddress();
         }
-        //System.out.println("Formatted Address: " + s);
+        System.out.println("Formatted Address: " + s);
         return s;
     }
 }

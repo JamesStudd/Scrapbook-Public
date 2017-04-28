@@ -108,8 +108,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-
-                    location.append("\n" +intent.getExtras().get("coordinates"));
+                    location.setText(""+intent.getExtras().get("coordinates"));
+                    setFormattedAddress();
 
                 }
             };
@@ -180,7 +180,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         if(!runtime_permissions())
             enable_buttons();
 
-
+        setFormattedAddress();
 
     }
 
@@ -300,8 +300,13 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
-    public void setFormattedAddress(String formattedAddress){
-        location.setText(formattedAddress);
+    public void setFormattedAddress(){
+        if(LocationHelper.getlInstance().currentLocation != null){
+            location.setText(LocationHelper.getlInstance().currentLocation);
+        } else {
+            System.out.println("is null");
+        }
+
     }
 
 }
