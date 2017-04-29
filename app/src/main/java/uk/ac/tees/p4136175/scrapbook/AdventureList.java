@@ -63,7 +63,7 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
         }
 
         ia.getImages();
-        System.out.println(ia.getImageList());
+        System.out.println("ia.getImageList() : " + ia.getImageList());
 
 
 
@@ -77,15 +77,14 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
             gv.setVisibility(View.VISIBLE);
             ListView lv = getListView();
             lv.setVisibility(View.INVISIBLE);
-            Toast.makeText(getApplicationContext(), "Image View Selected", Toast.LENGTH_SHORT).show();
-            ArrayList<HashMap<String, Object>> adventureList =  repo.getAdventureEntryGrid();
+            final ArrayList<HashMap<String, Object>> adventureList =  repo.getAdventureEntryGrid();
             if(adventureList.size()!=0) {
                 GridView gv = (GridView) findViewById(R.id.gridView1);
                 gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
-                        String adventureId = adventure_id.getText().toString();
+                        adventure_id = (TextView) view.findViewById(R.id.adventure_Id_grid);
+                        String adventureId = String.valueOf(adventureList.get(Integer.parseInt(String.valueOf(position))).get("id"));
                         Intent objIndent = new Intent(getApplicationContext(),MakeAdventure.class);
                         objIndent.putExtra("adventure_Id", Integer.parseInt( adventureId));
                         startActivity(objIndent);
@@ -99,7 +98,6 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
             gv.setVisibility(View.INVISIBLE);
             ListView lv = getListView();
             lv.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(), "Note View Selected", Toast.LENGTH_SHORT).show();
             ArrayList<HashMap<String, String>> adventureList =  repo.getAdventureEntryList();
             if(adventureList.size()!=0) {
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
