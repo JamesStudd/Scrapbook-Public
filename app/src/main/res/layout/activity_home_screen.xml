@@ -51,5 +51,40 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="180dp"/>
 
+    <TextView
+        android:text="&lt;"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/leftArrow"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="300dp"
+ />
+
+    <TextView
+        android:text="&gt;"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rightArrow"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="300dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:id="@+id/noteSearch"
+        android:layout_marginTop="200dp"/>
+
+    <Button
+        android:text="Find"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addButton"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/findButton"
+        android:background="#303f9f" />
+
 
 </RelativeLayout>

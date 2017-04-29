@@ -57,15 +57,18 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
         Bundle b = getIntent().getExtras();
         if (b!=null){
             //System.out.println(b.getString("date"));
-            displayEntriesByDate(b.getString("date"));
+            if(b.containsKey("date")){
+                displayEntriesByDate(b.getString("date"));
+            } else if (b.containsKey("note")){
+                displayEntriesByNote(b.getString("note"));
+            }
+
         } else {
             refreshList();
         }
 
         ia.getImages();
         System.out.println("ia.getImageList() : " + ia.getImageList());
-
-
 
 
     }
@@ -168,6 +171,54 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
             Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+    public void displayEntriesByNote(String note){
+
+        // Set the top widgets to invisible - Text views and switch
+        changeView.setVisibility(View.INVISIBLE);
+        noteView.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.INVISIBLE);
+
+        ListView lv = getListView();
+        lv.setVisibility(View.VISIBLE);
+
+
+        // adventureList is all the current entries
+        ArrayList<HashMap<String, String>> adventureList =  repo.getAdventureEntryList();
+
+        // adventureListWithCorrectNotes will be populated with only entries
+        // that contain any of the note text
+        ArrayList<HashMap<String, String>> adventureListWithCorrectNotes =  new ArrayList<>();
+
+        int i = 0;
+        for (HashMap<String, String> entry : adventureList){
+            String s = entry.get("note_text");
+
+            if (s.toLowerCase().indexOf(note.toLowerCase()) != -1){
+                adventureListWithCorrectNotes.add(adventureList.get(i));
+            }
+
+            i++;
+        }
+
+        if(adventureListWithCorrectNotes.size()!=0) {
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
+                    String adventureId = adventure_id.getText().toString();
+                    Intent objIndent = new Intent(getApplicationContext(),MakeAdventure.class);
+                    objIndent.putExtra("adventure_Id", Integer.parseInt( adventureId));
+                    startActivity(objIndent);
+                }
+            });
+            ListAdapter adapter = new SimpleAdapter( AdventureList.this,adventureListWithCorrectNotes, R.layout.activity_view_adventure_entry, new String[] { "id","note_text","datetime"}, new int[] {R.id.adventure_Id, R.id.adventure_note, R.id.adventure_datetime});
+            setListAdapter(adapter);
+        }else{
+            Toast.makeText(this,"No adventures!",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
