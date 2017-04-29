@@ -20,7 +20,6 @@ import java.util.HashMap;
 
 public class AdventureList extends ListActivity implements View.OnClickListener{
 
-    Button backBtn, refreshBtn;
     TextView adventure_id;
     Switch changeView;
     ImageAdapter ia;
@@ -36,12 +35,6 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adventure_list);
-
-        backBtn = (Button) findViewById(R.id.backButton);
-        backBtn.setOnClickListener(this);
-
-        refreshBtn = (Button) findViewById(R.id.refreshButton);
-        refreshBtn.setOnClickListener(this);
 
         noteView = (TextView) findViewById(R.id.noteViewText);
         noteView.setVisibility(View.VISIBLE);
@@ -182,12 +175,6 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (v == findViewById(R.id.backButton)){
-            finish();
-        } else if (v == findViewById(R.id.refreshButton)){
-            refreshList();
-        } else {
-            refreshList();
-        }
+       //
     }
 }

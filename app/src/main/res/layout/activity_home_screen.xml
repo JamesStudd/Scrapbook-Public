@@ -25,34 +25,6 @@
         android:layout_marginLeft="100dp"
         />
 
-    <Button
-        android:text="Show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/showHideButton"
-        android:layout_marginTop="490dp"
-        android:layout_marginLeft="132dp"
-        android:background="#303f9f"/>
-
-    <Button
-        android:text="List"
-        android:layout_width="wrap_content"
-        android:layout_height="120px"
-        android:id="@+id/listButton"
-        android:layout_marginTop="540dp"
-        android:layout_marginLeft="180dp"
-        android:background="#303f9f"
-        />
-
-    <Button
-        android:text="Search"
-        android:layout_width="wrap_content"
-        android:layout_height="120px"
-        android:id="@+id/searchButton"
-        android:layout_marginTop="540dp"
-        android:layout_marginLeft="85dp"
-        android:background="#303f9f"/>
-
     <CalendarView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +32,24 @@
         android:layout_alignTop="@+id/addButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchButton"
+        android:background="#303f9f"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="80dp"/>
+
+    <Button
+        android:text="List"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listButton"
+        android:background="#303f9f"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="180dp"/>
 
 
 </RelativeLayout>

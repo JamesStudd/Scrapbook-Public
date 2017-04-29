@@ -93,6 +93,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
         btnDelete = (Button) findViewById(R.id.deleteButton);
         btnDelete.setOnClickListener(this);
+        btnDelete.setEnabled(false);
 
         btnCancel = (Button) findViewById(R.id.cancelButton);
         btnCancel.setOnClickListener(this);
@@ -120,10 +121,11 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         Intent intent = getIntent();
         _Adventure_Id =intent.getIntExtra("adventure_Id", 0);
         AdventureRepo repo = new AdventureRepo(this);
-        AdventureEntry adv = new AdventureEntry();
+        AdventureEntry adv;
         adv = repo.getAdventureById(_Adventure_Id);
 
         if(adv.note_text != null){
+            btnDelete.setEnabled(true);
             makeEntry.setText(String.valueOf(adv.note_text));
         }
 

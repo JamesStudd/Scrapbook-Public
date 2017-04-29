@@ -15,10 +15,9 @@ import android.widget.Toast;
 
 public class HomeScreen extends AppCompatActivity implements android.view.View.OnClickListener{
 
-    Button btnAdd, btnList, showHide, btnSearch;
+    Button btnAdd, btnList, btnSearch;
     final Context context = this;
     Animation slideUpAnimation, slideDownAnimation;
-    boolean menuShow = false;
     CalendarView cv;
     boolean calendarShown = false;
 
@@ -34,8 +33,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         btnList = (Button) findViewById(R.id.listButton);
         btnList.setOnClickListener(this);
 
-        showHide = (Button) findViewById(R.id.showHideButton);
-        showHide.setOnClickListener(this);
 
         btnSearch = (Button) findViewById(R.id.searchButton);
         btnSearch.setOnClickListener(this);
@@ -57,10 +54,10 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             }
         });
 
-        slideUpAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_up_animation);
-        slideUpAnimation.setFillAfter(true);
-        slideDownAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_down_animation);
-        slideDownAnimation.setFillAfter(true);
+        //slideUpAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_up_animation);
+        //slideUpAnimation.setFillAfter(true);
+        //slideDownAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_down_animation);
+        //slideDownAnimation.setFillAfter(true);
 
     }
 
@@ -72,35 +69,27 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         } else if (v == findViewById(R.id.listButton)){
             Intent intent = new Intent(context, AdventureList.class);
             startActivity(intent);
-        } else if (v == findViewById(R.id.showHideButton)){
-            startAnimation("menu");
-            if(calendarShown){
-                cv.setVisibility(View.INVISIBLE);
-                btnAdd.animate().scaleX(1f).start();
-                btnAdd.animate().scaleY(1f).start();
-                btnAdd.animate().translationY(0).start();
-                calendarShown = false;
-            }
         } else if (v == findViewById(R.id.searchButton)){
             startAnimation("calendar");
         }
     }
 
     public void startAnimation(String animationType){
-        if(animationType == "menu"){
-            if(menuShow) {
-                btnSearch.animate().translationY(0).start();
-                btnList.animate().translationY(0).start();
-                showHide.animate().translationY(0).start();
-                showHide.setText("Show");
-            } else {
-                btnSearch.animate().translationY(-160).start();
-                btnList.animate().translationY(-160).start();
-                showHide.animate().translationY(-160).start();
-                showHide.setText("Hide");
-            }
-            menuShow = !menuShow;
-        } else if (animationType == "calendar"){
+//        if(animationType == "menu"){
+//            if(menuShow) {
+//                btnSearch.animate().translationY(0).start();
+//                btnList.animate().translationY(0).start();
+//                showHide.animate().translationY(0).start();
+//                showHide.setText("Show");
+//            } else {
+//                btnSearch.animate().translationY(-160).start();
+//                btnList.animate().translationY(-160).start();
+//                showHide.animate().translationY(-160).start();
+//                showHide.setText("Hide");
+//            }
+//            menuShow = !menuShow;
+//        }
+        if (animationType == "calendar"){
             if(calendarShown){
                 btnAdd.animate().scaleX(1f).start();
                 btnAdd.animate().scaleY(1f).start();
