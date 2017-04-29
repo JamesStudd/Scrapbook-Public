@@ -279,6 +279,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 repo.update(adv);
                 Toast.makeText(this, "Adventure Entry Updated", Toast.LENGTH_SHORT).show();
             }
+            unregisterReceiver(broadcastReceiver);
+            finish();
         } else if (v == findViewById(R.id.deleteButton)){
             AdventureRepo repo = new AdventureRepo(this);
             repo.delete(_Adventure_Id);
