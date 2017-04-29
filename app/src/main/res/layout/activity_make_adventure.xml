@@ -48,7 +48,7 @@
         android:text="Current Location: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
+        android:id="@+id/locationTextStatic"
         android:layout_marginBottom="43dp"
         android:layout_above="@+id/saveButton"
         android:layout_alignLeft="@+id/saveButton"
@@ -60,8 +60,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/locationText"
-        android:layout_alignBaseline="@+id/textView"
-        android:layout_alignBottom="@+id/textView"
+        android:layout_alignBaseline="@+id/locationTextStatic"
+        android:layout_alignBottom="@+id/locationTextStatic"
         android:layout_toRightOf="@+id/deleteButton"
         android:layout_toEndOf="@+id/deleteButton" />
 
@@ -69,18 +69,18 @@
         android:text="Current Date:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
+        android:layout_above="@+id/locationTextStatic"
+        android:layout_alignLeft="@+id/locationTextStatic"
+        android:layout_alignStart="@+id/locationTextStatic"
         android:layout_marginLeft="23dp"
         android:layout_marginStart="23dp"
-        android:id="@+id/textView3" />
+        android:id="@+id/dateTextStatic" />
 
     <TextView
         android:text="date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView"
+        android:layout_above="@+id/locationTextStatic"
         android:layout_alignLeft="@+id/locationText"
         android:layout_alignStart="@+id/locationText"
         android:id="@+id/dateText" />
@@ -102,8 +102,8 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/biggreen"
         android:layout_below="@+id/adventureEntry"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
+        android:layout_alignLeft="@+id/locationTextStatic"
+        android:layout_alignStart="@+id/locationTextStatic"
         android:layout_marginTop="85dp"
         android:id="@+id/imageView"
         android:layout_above="@+id/imageButton"
@@ -116,8 +116,17 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="21dp"
         android:id="@+id/imageButton"
-        android:layout_above="@+id/textView3"
+        android:layout_above="@+id/dateTextStatic"
         android:layout_toRightOf="@+id/saveButton"
         android:layout_toEndOf="@+id/saveButton" />
+
+    <CalendarView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/saveButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="13dp"
+        android:id="@+id/calendarViewDate" />
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -26,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +38,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+
 import android.view.Menu;
 
 
@@ -66,8 +73,14 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
     Button btnSave, btnCancel, btnDelete;
     EditText makeEntry;
-    TextView date, location;
+    TextView dateTextView, location, dateStatic, locationStatic;
     String formattedDate;
+    CalendarView calendarView;
+    String selectedDate;
+    List<View> listOfComponents = new ArrayList<>();
+    DateFormat dateFormat;
+    Date date;
+
     private int _Adventure_Id=0;
 
     // Image Stuff
@@ -90,20 +103,67 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         // Get all the components of the UI
         btnSave = (Button) findViewById(R.id.saveButton);
         btnSave.setOnClickListener(this);
+        listOfComponents.add(btnSave);
 
         btnDelete = (Button) findViewById(R.id.deleteButton);
         btnDelete.setOnClickListener(this);
         btnDelete.setEnabled(false);
+        listOfComponents.add(btnDelete);
 
         btnCancel = (Button) findViewById(R.id.cancelButton);
         btnCancel.setOnClickListener(this);
+        listOfComponents.add(btnCancel);
 
         makeEntry = (EditText) findViewById(R.id.adventureEntry);
+        listOfComponents.add(makeEntry);
 
-        date = (TextView) findViewById(R.id.dateText);
+        dateStatic = (TextView) findViewById(R.id.dateTextStatic);
+        listOfComponents.add(dateStatic);
+
+        locationStatic = (TextView) findViewById(R.id.locationTextStatic);
+        listOfComponents.add(locationStatic);
+
         location = (TextView) findViewById(R.id.locationText);
+        listOfComponents.add(location);
 
         mImageView = (ImageView) findViewById(R.id.imageView);
+        listOfComponents.add(mImageView);
+
+        dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        date = new Date();
+        selectedDate = dateFormat.format(date);
+
+        calendarView = (CalendarView) findViewById(R.id.calendarViewDate);
+        calendarView.setVisibility(View.INVISIBLE);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                String[] monthNames = {"Jan","Feb","Mar","Apr","May","Jun",
+                        "Jul","Aug","Sep","Oct","Nov","Dec"};
+
+                selectedDate = dayOfMonth + " " + monthNames[month] + " " + year;
+                changeComponents(View.VISIBLE);
+
+                if(!Objects.equals(selectedDate, dateFormat.format(date))){
+                    dateStatic.setText("Chosen Date:");
+                } else {
+                    dateStatic.setText("Current Date:");
+                }
+                dateTextView.setText(selectedDate);
+            }
+        });
+
+
+
+        dateTextView = (TextView) findViewById(R.id.dateText);
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarView.setVisibility(View.VISIBLE);
+                changeComponents(View.INVISIBLE);
+            }
+        });
+        listOfComponents.add(dateTextView);
 
         if(broadcastReceiver == null){
             broadcastReceiver = new BroadcastReceiver() {
@@ -137,11 +197,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             System.out.println("adv image was null.");
         }
 
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df  = new SimpleDateFormat("dd MMM yyyy");
-        formattedDate = df.format(c.getTime());
-
-        date.setText(formattedDate);
+        dateTextView.setText(selectedDate);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -178,6 +234,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
             }
         });
+        listOfComponents.add(pickImage);
 
         if(!runtime_permissions())
             enable_buttons();
@@ -311,6 +368,15 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             System.out.println("is null");
         }
 
+    }
+
+    private void changeComponents(int state){
+        for (View v : listOfComponents){
+            v.setVisibility(state);
+        }
+        if(state == View.VISIBLE){
+            calendarView.setVisibility(View.INVISIBLE);
+        }
     }
 
 }
