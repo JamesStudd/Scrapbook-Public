@@ -4,8 +4,12 @@ package uk.ac.tees.p4136175.scrapbook;
  * Created by p4136175 on 07/03/2017.
  */
 
+/**
+ * This will be used for each 'adventure' that the user adds
+ */
 public class AdventureEntry {
 
+    // Name of the table that will be used
     public static final String TABLE = "AdventureEntry";
 
     // Labels Table Column Names

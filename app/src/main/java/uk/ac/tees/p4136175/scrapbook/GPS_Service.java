@@ -35,6 +35,9 @@ import java.util.logging.Logger;
  * Created by Sean on 28/03/2017.
  */
 
+/**
+ * The GPS Service allows for using the current location of the android phone
+ */
 @SuppressWarnings("MissingPermission")
 public class GPS_Service extends Service {
 
@@ -100,7 +103,7 @@ public class GPS_Service extends Service {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String locationName(float longi, float lati) {
 
-        ApiThread apiThread = new ApiThread(longi, lati, "");
+        ApiThread apiThread = new ApiThread(longi, lati);
         new Thread(apiThread).start();
 
         String s = null;

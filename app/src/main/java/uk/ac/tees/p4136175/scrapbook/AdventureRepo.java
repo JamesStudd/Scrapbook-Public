@@ -13,14 +13,28 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ * This class gets a repository of all the adventure entries
+ */
 public class AdventureRepo {
 
+    // Local instance of DBHelper, used to access the database
     private DBHelper dbHelper;
 
+    /**
+     * Constructor
+     * @param context Activity
+     */
     public AdventureRepo(Context context) { dbHelper = new DBHelper(context);}
 
+    /**
+     * Insert an entry into the DB
+     * @param adv The entrty
+     * @return Whether or not the insert was successful
+     */
     public int insert(AdventureEntry adv){
+
+        // Create a database entry passing in all the variables of adventure
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(adv.KEY_note, adv.note_text);
@@ -34,6 +48,10 @@ public class AdventureRepo {
         return (int) adv_Id;
     }
 
+    /**
+     * Deletes an adventure entry from the database
+     * @param adv_Id The ID of the adventure wanting to be deleted
+     */
     public void delete(int adv_Id) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -42,11 +60,16 @@ public class AdventureRepo {
         db.close(); // Closing database connection
     }
 
+    /**
+     * Update an entry in the database
+     * @param adv The adventure to be updated
+     */
     public void update(AdventureEntry adv) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        // Updates each variable in the database
         values.put(adv.KEY_note, adv.note_text);
         values.put(adv.KEY_image, adv.image);
         values.put(adv.KEY_datetime, adv.datetime);
@@ -58,6 +81,12 @@ public class AdventureRepo {
         db.close(); // Closing database connection
     }
 
+    /**
+     * Gets a list of all the current adventure entries, the hashmap will consist of:
+     * The note text of the entry
+     * The date of the entry
+     * @return
+     */
     public ArrayList<HashMap<String, String>>  getAdventureEntryList() {
         //Open connection to read only
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -70,15 +99,21 @@ public class AdventureRepo {
                 AdventureEntry.KEY_loc_lat +
                 " FROM " + AdventureEntry.TABLE;
 
+        // Initiallise the list to be returned
         ArrayList<HashMap<String, String>> adventureEntryList = new ArrayList<HashMap<String, String>>();
 
+        // Intiailise a cursor, this can select entries in the table
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
 
+        // If there are entries in the db
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> adventureEntry = new HashMap<String, String>();
                 adventureEntry.put("id", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_ID)));
+
+                // The temp variable is used so that if the note text is above 50 characters, the
+                // last 3 characters will be changed to "..." so that it doesn't take up too much space
                 String temp = "";
                 if (cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note)).length() > 50){
                     temp = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_note)).substring(0, 50) + "...";
@@ -89,15 +124,21 @@ public class AdventureRepo {
                 adventureEntry.put("datetime", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_datetime)));
                 adventureEntryList.add(adventureEntry);
 
-            } while (cursor.moveToNext());
+            } while (cursor.moveToNext()); // whilst there are still entries to go to
         }
 
-        cursor.close();
-        db.close();
+        cursor.close(); // These are used for safety
+        db.close(); //       ^    ^    ^   ^   ^
         return adventureEntryList;
 
     }
 
+    /**
+     * Returns a list of all the current adventure entries, this hashmap will consist of:
+     * Id of the current adventure
+     * Image of the current adventure
+     * @return
+     */
     public ArrayList<HashMap<String, Object>> getAdventureEntryGrid() {
         //Open connection to read only
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -130,11 +171,11 @@ public class AdventureRepo {
         return adventureEntryGrid;
     }
 
-    private String getLocation(int loc_lang, int loc_lat){
-        // Will eventually take the loc_lang and loc_lat and return an approximate location
-        return "";
-    }
-
+    /**
+     * Return a single adventure by passing in the requested ID
+     * @param Id The requested adventure
+     * @return the adventure entry
+     */
     public AdventureEntry getAdventureById(int Id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery =  "SELECT  " +
@@ -148,14 +189,14 @@ public class AdventureRepo {
                 + " WHERE " +
                 AdventureEntry.KEY_ID + "=?";// It's a good practice to use parameter ?, instead of concatenate string
 
-        int iCount =0;
+        // Create a blank entry for variables to be passed into
         AdventureEntry aEntry = new AdventureEntry();
 
         Cursor cursor = db.rawQuery(selectQuery, new String[] { String.valueOf(Id) } );
 
         if (cursor.moveToFirst()) {
 
-            do {
+            do { // Basically casts each variable to the correct type
 
                 aEntry.ID =cursor.getInt(cursor.getColumnIndex(AdventureEntry.KEY_ID));
                 //System.out.println("id: " + aEntry.ID);

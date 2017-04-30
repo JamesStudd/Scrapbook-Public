@@ -46,7 +46,10 @@ import java.util.Objects;
 
 import android.view.Menu;
 
-
+/**
+ * This class is the longest, it allows for new adventures to be created but also
+ * has other methods to get the current location, allow access to the image gallery
+ */
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
     private GPS_Service gps_service;
@@ -276,12 +279,21 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * When an activity has a result
+     * @param requestCode The request code
+     * @param resultCode THe result code
+     * @param imageReturnedIntent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
+        // Switch case for the request code
         switch(requestCode) {
+            // if the request is to select a photo
             case SELECT_PHOTO:
+                // if the result code is successful
                 if(resultCode == RESULT_OK){
                     final Uri imageUri = imageReturnedIntent.getData();
                     InputStream imageStream = null;
@@ -315,11 +327,20 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         return cursor.getString(column_index);
     }
 
+    /**
+     * When a component is clicked
+     * @param v THe component
+     */
     @Override
     public void onClick(View v) {
+        // if the component is the save button
         if(v == findViewById(R.id.saveButton)){
+
+            // Create a local repo and a blank adventure
             AdventureRepo repo = new AdventureRepo(this);
             AdventureEntry adv = new AdventureEntry();
+
+            // Set the ID to the adventure Id made earlier
             adv.ID = _Adventure_Id;
             adv.note_text = makeEntry.getText().toString();
 
@@ -329,47 +350,66 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             adv.loc_lang = "tester";
             adv.loc_lat = "tester";
 
+            // If the adventure is new, insert it into the DB
             if(_Adventure_Id == 0){
                 _Adventure_Id = repo.insert(adv);
                 Toast.makeText(this, "New Adventure Created", Toast.LENGTH_SHORT).show();
+            // If the adventure is exisiting already, just update it
             } else {
                 repo.update(adv);
                 Toast.makeText(this, "Adventure Entry Updated", Toast.LENGTH_SHORT).show();
             }
+            // Unregister the location broadcast so the program doesn't crash
             unregisterReceiver(broadcastReceiver);
             finish();
+        // If the component is the delete button
         } else if (v == findViewById(R.id.deleteButton)){
+            // Use the repo delete method
             AdventureRepo repo = new AdventureRepo(this);
             repo.delete(_Adventure_Id);
             Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
             finish();
+        // If the component is the cancel button
         } else if (v == findViewById(R.id.cancelButton)){
+            // Unregister the broadcast receiver then end the intent
             unregisterReceiver(broadcastReceiver);
             finish();
         }
     }
 
-    // This converts from bitmap to byte array
+    /**
+     * THis converts a bitmap to a byte[] array
+     * @param bitmap The bitmap
+     * @return A byte[] array
+     */
     public static byte[] getBytes(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         return stream.toByteArray();
     }
 
-    // This converts from byte array to bitmap
+    /**
+     * This converts a byte[] array to a bitmap
+     * @param image The byte[] array
+     * @return Bitmap
+     */
     public static Bitmap getImage(byte[] image){
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
+    /**
+     * Set the location text to the formatted address using the global variable
+     */
     public void setFormattedAddress(){
         if(LocationHelper.getlInstance().currentLocation != null){
             location.setText(LocationHelper.getlInstance().currentLocation);
-        } else {
-            System.out.println("is null");
         }
-
     }
 
+    /**
+     * Take each component on the make adventure page and set them visible, or invisible
+     * @param state View.Visible or View.Invisible
+     */
     private void changeComponents(int state){
         for (View v : listOfComponents){
             v.setVisibility(state);

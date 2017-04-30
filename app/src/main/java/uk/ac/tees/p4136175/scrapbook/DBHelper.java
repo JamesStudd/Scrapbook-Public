@@ -8,6 +8,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * THis class allows access to the database
+ */
 public class DBHelper extends SQLiteOpenHelper {
 
     //version number to upgrade database version
