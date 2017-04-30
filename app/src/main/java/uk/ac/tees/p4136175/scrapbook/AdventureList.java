@@ -114,6 +114,10 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
             // Set the grid view visibility to false
             gridView.setVisibility(View.VISIBLE);
 
+            // Get the list view and then set it invisible
+            ListView lv = getListView();
+            lv.setVisibility(View.INVISIBLE);
+
             // Create an ArrayList of HashMaps using the repo method "getAdventureEntryGrid()"
             // This returns the ID and Image of each adventure
             final ArrayList<HashMap<String, Object>> adventureList =  repo.getAdventureEntryGrid();
