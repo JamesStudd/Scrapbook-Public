@@ -21,7 +21,7 @@ import android.widget.Toast;
  * 'List' button
  * Navigation bar
  */
-public class HomeScreen extends AppCompatActivity implements android.view.View.OnClickListener{
+public class HomeScreen extends AppCompatActivity implements android.view.View.OnClickListener {
 
     // btnAdd = Make Adventure
     // btnList = List adventures
@@ -49,6 +49,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
     /**
      * When the activity starts
+     *
      * @param savedInstanceState
      */
     @Override
@@ -85,8 +86,8 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 // Used to convert the month to a 3 letter representation to store in the DB
-                String[] monthNames = {"Jan","Feb","Mar","Apr","May","Jun",
-                        "Jul","Aug","Sep","Oct","Nov","Dec"};
+                String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
                 // Concatenate a string using the day, month and year
                 String date = dayOfMonth + " " + monthNames[month] + " " + year;
@@ -116,6 +117,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     /**
      * Anytime a component with an action listener is clicked, actions
      * will be performed
+     *
      * @param v The component that has had an action performed on it
      */
     @Override
@@ -124,17 +126,17 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         if (v == findViewById(R.id.addButton)) {
             Intent intent = new Intent(context, MakeAdventure.class);
             startActivity(intent);
-        // If the list button is selected, the AdventureList activity is called
-        } else if (v == findViewById(R.id.listButton)){
+            // If the list button is selected, the AdventureList activity is called
+        } else if (v == findViewById(R.id.listButton)) {
             Intent intent = new Intent(context, AdventureList.class);
             startActivity(intent);
-        // If the search button is selected, the calendar will go invisible or visible based on
-        // what the current state is
-        } else if (v == findViewById(R.id.searchButton)){
-            startAnimation("calendar");
-        // If the find button is selected, the AdventureList activity is called whilst passing
-        // in the current noteSearch string (search)
-        } else if (v == findViewById(R.id.findButton)){
+            // If the search button is selected, the calendar will go invisible or visible based on
+            // what the current state is
+        } else if (v == findViewById(R.id.searchButton)) {
+            startCalendarAnimation();
+            // If the find button is selected, the AdventureList activity is called whilst passing
+            // in the current noteSearch string (search)
+        } else if (v == findViewById(R.id.findButton)) {
             Intent intent = new Intent(context, AdventureList.class);
             Bundle b = new Bundle();
             b.putString("note", noteSearch.getText().toString());
@@ -142,28 +144,20 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             startActivity(intent);
         }
         // If either of the arrows is clicked, this is here just so code wouldn't be repeated too much
-        if(v == findViewById(R.id.leftArrow) || v==findViewById(R.id.rightArrow)){
+        if (v == findViewById(R.id.leftArrow) || v == findViewById(R.id.rightArrow)) {
             // If the right arrow is clicked and the current search is not already at the max
             // increment currentSearch
-            if (v == findViewById(R.id.rightArrow) && currentSearch != 1){
+            if (v == findViewById(R.id.rightArrow) && currentSearch != 1) {
                 currentSearch++;
-            // Otherwise, if the left arrow is clicked and the current search isn't already at
-            // the minimum, decrement currentSearch
-            } else if (v == findViewById(R.id.leftArrow) && currentSearch != 0){
+                // Otherwise, if the left arrow is clicked and the current search isn't already at
+                // the minimum, decrement currentSearch
+            } else if (v == findViewById(R.id.leftArrow) && currentSearch != 0) {
                 currentSearch--;
             }
 
-            // Switch case for currentSearch, 0 is calendar, 1 is note
-            switch(currentSearch){
-                case 0:
-                    // Make the: calendar visible, editText & find button invisible
-                    showWayOfSearching("calendar");
-                    break;
-                case 1:
-                    // Make the calendar invisible, editText & find button visible
-                    showWayOfSearching("note");
-                    break;
-            }
+            // Show or Hide some components based on the currentSearch variable
+            // 0 is calendar, 1 is note
+            showWayOfSearching(currentSearch);
 
         }
 
@@ -172,52 +166,54 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     /**
      * Animates the 'Make Adventure' button as well as removing
      * the left arrow, right arrow and the calendar
-     * @param animationType String 'calendar' will make the calendar invisible
+     *
      */
-    public void startAnimation(String animationType){
-        if (animationType == "calendar"){
-            if(calendarShown){
-                // If the calendar is already shown, make the 'Make Adventure' button bigger
-                // and move it back down, as well as making the calendar and each arrow invisible
-                btnAdd.animate().scaleX(1f).start();
-                btnAdd.animate().scaleY(1f).start();
-                btnAdd.animate().translationY(0).start();
+    public void startCalendarAnimation() {
+        if (calendarShown) {
+            // If the calendar is already shown, make the 'Make Adventure' button bigger
+            // and move it back down, as well as making the calendar and each arrow invisible
+            btnAdd.animate().scaleX(1f).start();
+            btnAdd.animate().scaleY(1f).start();
+            btnAdd.animate().translationY(0).start();
 
-                calendarView.setVisibility(View.INVISIBLE);
-                leftArrow.setVisibility(View.INVISIBLE);
-                rightArrow.setVisibility(View.INVISIBLE);
-            } else {
-                // If the calendar isn't shown, make the 'Make Adventure' button smaller and move
-                // it up out of the way as well as making the calendar and each arrow visible
-                btnAdd.animate().scaleX(0.5f).start();
-                btnAdd.animate().scaleY(0.5f).start();
-                btnAdd.animate().translationY(-300).start();
-                calendarView.setVisibility(View.VISIBLE);
-                leftArrow.setVisibility(View.VISIBLE);
-                rightArrow.setVisibility(View.VISIBLE);
-            }
-            // Set calendarShown = not calendarShown (true to false, false to true)
-            calendarShown = !calendarShown;
-            // Make the find button and note search invisible
-            btnFind.setVisibility(View.INVISIBLE);
-            noteSearch.setVisibility(View.INVISIBLE);
+            calendarView.setVisibility(View.INVISIBLE);
+            leftArrow.setVisibility(View.INVISIBLE);
+            rightArrow.setVisibility(View.INVISIBLE);
+        } else {
+            // If the calendar isn't shown, make the 'Make Adventure' button smaller and move
+            // it up out of the way as well as making the calendar and each arrow visible
+            btnAdd.animate().scaleX(0.5f).start();
+            btnAdd.animate().scaleY(0.5f).start();
+            btnAdd.animate().translationY(-300).start();
+            calendarView.setVisibility(View.VISIBLE);
+            leftArrow.setVisibility(View.VISIBLE);
+            rightArrow.setVisibility(View.VISIBLE);
         }
+        // Set calendarShown = not calendarShown (true to false, false to true)
+        calendarShown = !calendarShown;
+        // Make the find button and note search invisible
+        btnFind.setVisibility(View.INVISIBLE);
+        noteSearch.setVisibility(View.INVISIBLE);
 
     }
 
     /**
      * Sets the calender and noteSearch components invisible or visible based on the parameter
-     * @param state will either be 'calendar' or 'note'
+     *
+     * @param state will either be '0' or '1', 0 = calendar, 1 = note
      */
-    public void showWayOfSearching(String state){
-        if(state == "calendar"){
-            calendarView.setVisibility(View.VISIBLE);
-            noteSearch.setVisibility(View.INVISIBLE);
-            btnFind.setVisibility(View.INVISIBLE);
-        } else if (state == "note"){
-            calendarView.setVisibility(View.INVISIBLE);
-            noteSearch.setVisibility(View.VISIBLE);
-            btnFind.setVisibility(View.VISIBLE);
+    public void showWayOfSearching(int state) {
+        switch(state){
+            case 0: // Calendar
+                calendarView.setVisibility(View.VISIBLE);
+                noteSearch.setVisibility(View.INVISIBLE);
+                btnFind.setVisibility(View.INVISIBLE);
+                break;
+            case 1: // Note
+                calendarView.setVisibility(View.INVISIBLE);
+                noteSearch.setVisibility(View.VISIBLE);
+                btnFind.setVisibility(View.VISIBLE);
+                break;
         }
     }
 

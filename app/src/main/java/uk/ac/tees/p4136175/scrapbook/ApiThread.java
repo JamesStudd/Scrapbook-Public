@@ -75,9 +75,14 @@ public class ApiThread implements Runnable {
 
                 // Go through each layer of the JSON file to get the "formatted_address" this will
                 // be like so: 16 Example Drive, Exampletown, Examplecounty
-                JSONArray j = (JSONArray) json.get("results");
-                JSONObject j2 = (JSONObject) j.get(0);
-                formattedAddress = String.valueOf(j2.get("formatted_address"));
+                try{
+                    JSONArray j = (JSONArray) json.get("results");
+                    JSONObject j2 = (JSONObject) j.get(0);
+                    formattedAddress = String.valueOf(j2.get("formatted_address"));
+                } catch (NullPointerException ex){
+                    formattedAddress = "No Address Found";
+                }
+
 
 
             } catch (MalformedURLException ex) {
