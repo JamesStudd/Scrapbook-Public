@@ -77,8 +77,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     DateFormat dateFormat;
     Date date;
     WebView attributionText;
-    private final static int MY_PERMISSION_FINE_LOCATION = 101;
-    private final static int PLACE_PICKER_REQUEST = 102;
     final Context context = this;
     LocationManager locationManager;
 
@@ -100,8 +98,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_adventure);
-
-        requestPermission();
 
         // Get all the components of the UI
         btnSave = (Button) findViewById(R.id.saveButton);
@@ -341,15 +337,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 }
                 return;
             }
-            case MY_PERMISSION_FINE_LOCATION:
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-                break;
-            // other 'case' lines to check for other
-            // permissions this app might request
-
         }
     }
 
@@ -380,18 +367,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     mImageView.setImageBitmap(selectedImage);
 
                 }
-
-            case PLACE_PICKER_REQUEST:
-                if (resultCode == RESULT_OK) {
-                    Place place = PlacePicker.getPlace(MakeAdventure.this, imageReturnedIntent);
-                    locationText.setText(place.getAddress());
-                    if (place.getAttributions() == null) {
-                        attributionText.loadData("no attribution", "text/html; charset=utf-8", "UFT-8");
-                    } else {
-                        attributionText.loadData(place.getAttributions().toString(), "text/html; charset=utf-8", "UFT-8");
-                    }
-                }
-
         }
     }
 
@@ -463,33 +438,11 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             finish();
 
         } else if (v == findViewById(R.id.mapButton)) {
-            //THIS IS THE CODE TO OPEN THE INTENT BUILDER - LOOK AT THAT GUYS YOUTUBE VIDEO/WEBSITE IF YOU FORGET WHICH CODE IS NEEDED
-//            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-//            try {
-//                Intent intent = builder.build(MakeAdventure.this);
-//                startActivityForResult(intent, PLACE_PICKER_REQUEST);
-//            } catch (GooglePlayServicesRepairableException e) {
-//                e.printStackTrace();
-//            } catch (GooglePlayServicesNotAvailableException e) {
-//                e.printStackTrace();
-//            }
             Intent intent = new Intent(context, MapSearch.class);
             startActivity(intent);
 
-
         }
     }
-
-    private void requestPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
-            }
-        }
-    }
-
-
-
 
     /**
      * THis converts a bitmap to a byte[] array
