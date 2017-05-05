@@ -31,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.FileNotFoundException;
@@ -46,6 +47,8 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
     private final static int PLACE_PICKER_REQUEST = 102;
     TextView chosenLocation;
     WebView attributionText;
+    Marker marker;
+    TextView locationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         chosenLocation = (TextView) findViewById(R.id.chosenLocation);
+        //locationText = (TextView) findViewById(R.id.locationText);
 
         requestPermission();
 
@@ -178,7 +182,8 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
         if (requestCode == PLACE_PICKER_REQUEST){
             if (resultCode == RESULT_OK){
                 Place place = PlacePicker.getPlace(MapSearch.this, data);
-                chosenLocation.setText(place.getAddress());
+                String address = String.format("Place: %s",place.getAddress());
+                MakeAdventure.locationText.setText(address);
                 if (place.getAttributions() == null) {
                     attributionText.loadData("no attribution", "text/html; charset=utf-8", "UFT-8");
                 } else {
@@ -214,8 +219,15 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
                 e.printStackTrace();
             }
             Address address = addressList.get(0);
+            String preview = (address.getLocality() + ", " + address.getCountryName());
+            MakeAdventure.locationText.setText(preview);   //ITS BEING SET TO NULL ALSO WHEN WE GO BACK TO THE CREATION PAGE GPS RESETS TO OUR LOCATION
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Searched location"));
+            if (marker != null) {
+                marker.remove();
+            }
+            marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Searched location"));
+            System.out.println(locationText);
+
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.2f));
         }

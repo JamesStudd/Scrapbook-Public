@@ -69,7 +69,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
     Button btnSave, btnCancel, btnDelete, mapButton;
     EditText makeEntry;
-    TextView dateTextView, locationText, dateStatic, locationStatic;
+    TextView dateTextView, dateStatic, locationStatic;
     String formattedDate;
     CalendarView calendarView;
     String selectedDate;
@@ -79,6 +79,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     WebView attributionText;
     final Context context = this;
     LocationManager locationManager;
+    public static TextView locationText;
 
     private int _Adventure_Id=0;
 
