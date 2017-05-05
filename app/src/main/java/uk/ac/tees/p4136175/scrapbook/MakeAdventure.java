@@ -13,6 +13,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +30,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -37,6 +43,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,43 +53,34 @@ import java.util.Objects;
 
 import android.view.Menu;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 /**
  * This class is the longest, it allows for new adventures to be created but also
  * has other methods to get the current location, allow access to the image gallery
  */
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
-    private GPS_Service gps_service;
-    private BroadcastReceiver broadcastReceiver;
-
-    private void enable_buttons() {
-                Intent i = new Intent(getApplicationContext(),GPS_Service.class);
-                startService(i);
-    }
-
-    private boolean runtime_permissions() {
-        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}
-                    ,100);
-            return true;
-        }
-        return false;
-    }
-
-
-    //----------------------------------------------------------------------------------------------------------------------------------
-
-    Button btnSave, btnCancel, btnDelete;
+    Button btnSave, btnCancel, btnDelete, mapButton;
     EditText makeEntry;
-    TextView dateTextView, location, dateStatic, locationStatic;
+    TextView dateTextView, locationText, dateStatic, locationStatic;
     String formattedDate;
     CalendarView calendarView;
     String selectedDate;
     List<View> listOfComponents = new ArrayList<>();
     DateFormat dateFormat;
     Date date;
+    WebView attributionText;
+    private final static int MY_PERMISSION_FINE_LOCATION = 101;
+    private final static int PLACE_PICKER_REQUEST = 102;
+    final Context context = this;
+    LocationManager locationManager;
 
     private int _Adventure_Id=0;
 
@@ -103,10 +101,15 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_adventure);
 
+        requestPermission();
+
         // Get all the components of the UI
         btnSave = (Button) findViewById(R.id.saveButton);
         btnSave.setOnClickListener(this);
         listOfComponents.add(btnSave);
+
+        mapButton = (Button) findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(this);
 
         btnDelete = (Button) findViewById(R.id.deleteButton);
         btnDelete.setOnClickListener(this);
@@ -126,8 +129,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         locationStatic = (TextView) findViewById(R.id.locationTextStatic);
         listOfComponents.add(locationStatic);
 
-        location = (TextView) findViewById(R.id.locationText);
-        listOfComponents.add(location);
+        locationText = (TextView) findViewById(R.id.locationText);
+        listOfComponents.add(locationText);
 
         mImageView = (ImageView) findViewById(R.id.imageView);
         listOfComponents.add(mImageView);
@@ -135,6 +138,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         dateFormat = new SimpleDateFormat("dd MMM yyyy");
         date = new Date();
         selectedDate = dateFormat.format(date);
+
+        attributionText = (WebView) findViewById(R.id.wvAttribution);
 
         calendarView = (CalendarView) findViewById(R.id.calendarViewDate);
         calendarView.setVisibility(View.INVISIBLE);
@@ -167,18 +172,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         });
         listOfComponents.add(dateTextView);
-
-        if(broadcastReceiver == null){
-            broadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    location.setText(""+intent.getExtras().get("coordinates"));
-                    setFormattedAddress();
-
-                }
-            };
-        }
-        registerReceiver(broadcastReceiver, new IntentFilter("location_update"));
 
         _Adventure_Id =0;
         Intent intent = getIntent();
@@ -239,10 +232,93 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         });
         listOfComponents.add(pickImage);
 
-        if(!runtime_permissions())
-            enable_buttons();
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
 
-        setFormattedAddress();
+                    //Create a LatLng object with the coords gathered above
+                    LatLng latLng = new LatLng(latitude, longitude);
+
+                    Geocoder geocoder = new Geocoder(getApplicationContext());
+                    try {
+                        List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                        //Loads of methods using .get to get different info about the location
+                        String str = addressList.get(0).getLocality()+", ";
+                        str += addressList.get(0).getCountryName();
+                        locationText.setText(str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        }
+        else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+
+                    //Create a LatLng object with the coords gathered above
+                    LatLng latLng = new LatLng(latitude, longitude);
+
+                    Geocoder geocoder = new Geocoder(getApplicationContext());
+                    try {
+                        List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                        //Loads of methods using .get to get different info about the location
+                        String str = addressList.get(0).getLocality()+", ";
+                        str += addressList.get(0).getCountryName();
+                        locationText.setText(str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        }
 
     }
 
@@ -265,17 +341,15 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 }
                 return;
             }
-
-            case 100: {
-                if( grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    enable_buttons();
-                } else {
-                    runtime_permissions();
+            case MY_PERMISSION_FINE_LOCATION:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted", Toast.LENGTH_LONG).show();
+                    finish();
                 }
-            }
-
+                break;
             // other 'case' lines to check for other
             // permissions this app might request
+
         }
     }
 
@@ -306,6 +380,18 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     mImageView.setImageBitmap(selectedImage);
 
                 }
+
+            case PLACE_PICKER_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(MakeAdventure.this, imageReturnedIntent);
+                    locationText.setText(place.getAddress());
+                    if (place.getAttributions() == null) {
+                        attributionText.loadData("no attribution", "text/html; charset=utf-8", "UFT-8");
+                    } else {
+                        attributionText.loadData(place.getAttributions().toString(), "text/html; charset=utf-8", "UFT-8");
+                    }
+                }
+
         }
     }
 
@@ -333,6 +419,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
      */
     @Override
     public void onClick(View v) {
+
+
+
         // if the component is the save button
         if(v == findViewById(R.id.saveButton)){
 
@@ -360,7 +449,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(this, "Adventure Entry Updated", Toast.LENGTH_SHORT).show();
             }
             // Unregister the location broadcast so the program doesn't crash
-            unregisterReceiver(broadcastReceiver);
             finish();
         // If the component is the delete button
         } else if (v == findViewById(R.id.deleteButton)){
@@ -372,10 +460,36 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         // If the component is the cancel button
         } else if (v == findViewById(R.id.cancelButton)){
             // Unregister the broadcast receiver then end the intent
-            unregisterReceiver(broadcastReceiver);
             finish();
+
+        } else if (v == findViewById(R.id.mapButton)) {
+            //THIS IS THE CODE TO OPEN THE INTENT BUILDER - LOOK AT THAT GUYS YOUTUBE VIDEO/WEBSITE IF YOU FORGET WHICH CODE IS NEEDED
+//            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//            try {
+//                Intent intent = builder.build(MakeAdventure.this);
+//                startActivityForResult(intent, PLACE_PICKER_REQUEST);
+//            } catch (GooglePlayServicesRepairableException e) {
+//                e.printStackTrace();
+//            } catch (GooglePlayServicesNotAvailableException e) {
+//                e.printStackTrace();
+//            }
+            Intent intent = new Intent(context, MapSearch.class);
+            startActivity(intent);
+
+
         }
     }
+
+    private void requestPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
+            }
+        }
+    }
+
+
+
 
     /**
      * THis converts a bitmap to a byte[] array
@@ -402,7 +516,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
      */
     public void setFormattedAddress(){
         if(LocationHelper.getlInstance().currentLocation != null){
-            location.setText(LocationHelper.getlInstance().currentLocation);
+            locationText.setText(LocationHelper.getlInstance().currentLocation);
         }
     }
 

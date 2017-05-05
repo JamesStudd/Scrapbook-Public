@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Scrapbook</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_map_search">Map</string>
 </resources>

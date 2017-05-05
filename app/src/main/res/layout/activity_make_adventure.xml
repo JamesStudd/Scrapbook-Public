@@ -123,10 +123,27 @@
     <CalendarView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:id="@+id/calendarViewDate"
         android:layout_above="@+id/saveButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="13dp"
-        android:id="@+id/calendarViewDate" />
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Map"
+        android:layout_below="@+id/imageView"
+        android:layout_alignRight="@+id/calendarViewDate"
+        android:layout_alignEnd="@+id/calendarViewDate" />
+
+    <WebView
+        android:id="@+id/wvAttribution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Attribution"
+        android:textSize="16sp" />
 
 </RelativeLayout>
