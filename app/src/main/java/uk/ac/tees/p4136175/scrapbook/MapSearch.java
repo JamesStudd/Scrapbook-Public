@@ -82,6 +82,8 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
 
+                    System.out.println("Location" + latitude + " " + longitude);
+
                     //Create a LatLng object with the coords gathered above
                     LatLng latLng = new LatLng(latitude, longitude);
 
