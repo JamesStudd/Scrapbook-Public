@@ -1,9 +1,14 @@
 package uk.ac.tees.p4136175.scrapbook;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -11,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +33,8 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     // btnList = List adventures
     // btnSearch = Bring up the calendar/noteSearch
     // btnFind = Search when a note is typed in
-    Button btnAdd, btnList, btnSearch, btnFind;
+    Button btnList, btnSearch;
+    ImageButton btnAdd, btnFind;
 
     // This class
     final Context context = this;
@@ -60,16 +67,10 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         setContentView(R.layout.activity_home_screen);
 
         // Initialise the components, each button etc.
-        btnAdd = (Button) findViewById(R.id.addButton);
+        btnAdd = (ImageButton) findViewById(R.id.addButton);
         btnAdd.setOnClickListener(this);
 
-        btnList = (Button) findViewById(R.id.listButton);
-        btnList.setOnClickListener(this);
-
-        btnSearch = (Button) findViewById(R.id.searchButton);
-        btnSearch.setOnClickListener(this);
-
-        btnFind = (Button) findViewById(R.id.findButton);
+        btnFind = (ImageButton) findViewById(R.id.findButton);
         btnFind.setVisibility(View.INVISIBLE);
         btnFind.setOnClickListener(this);
 
@@ -112,6 +113,38 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         noteSearch = (EditText) findViewById(R.id.noteSearch);
         noteSearch.setVisibility(View.INVISIBLE);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+
+        //Testing with the action bar
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setLogo(R.drawable.snippetgreen);
+
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);  //App name has gone lmao, look again later
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.activity_main_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_id:
+                Toast.makeText(getApplicationContext(), "Settings selected",Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.search_id:
+                startCalendarAnimation();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -126,14 +159,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         if (v == findViewById(R.id.addButton)) {
             Intent intent = new Intent(context, MakeAdventure.class);
             startActivity(intent);
-            // If the list button is selected, the AdventureList activity is called
-        } else if (v == findViewById(R.id.listButton)) {
-            Intent intent = new Intent(context, AdventureList.class);
-            startActivity(intent);
-            // If the search button is selected, the calendar will go invisible or visible based on
-            // what the current state is
-        } else if (v == findViewById(R.id.searchButton)) {
-            startCalendarAnimation();
             // If the find button is selected, the AdventureList activity is called whilst passing
             // in the current noteSearch string (search)
         } else if (v == findViewById(R.id.findButton)) {
@@ -170,21 +195,11 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
      */
     public void startCalendarAnimation() {
         if (calendarShown) {
-            // If the calendar is already shown, make the 'Make Adventure' button bigger
-            // and move it back down, as well as making the calendar and each arrow invisible
-            btnAdd.animate().scaleX(1f).start();
-            btnAdd.animate().scaleY(1f).start();
-            btnAdd.animate().translationY(0).start();
 
             calendarView.setVisibility(View.INVISIBLE);
             leftArrow.setVisibility(View.INVISIBLE);
             rightArrow.setVisibility(View.INVISIBLE);
         } else {
-            // If the calendar isn't shown, make the 'Make Adventure' button smaller and move
-            // it up out of the way as well as making the calendar and each arrow visible
-            btnAdd.animate().scaleX(0.5f).start();
-            btnAdd.animate().scaleY(0.5f).start();
-            btnAdd.animate().translationY(-300).start();
             calendarView.setVisibility(View.VISIBLE);
             leftArrow.setVisibility(View.VISIBLE);
             rightArrow.setVisibility(View.VISIBLE);
@@ -196,6 +211,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         noteSearch.setVisibility(View.INVISIBLE);
 
     }
+
 
     /**
      * Sets the calender and noteSearch components invisible or visible based on the parameter
