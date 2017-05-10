@@ -3,6 +3,10 @@ package uk.ac.tees.p4136175.scrapbook;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +39,11 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     // btnFind = Search when a note is typed in
     Button btnList, btnSearch;
     ImageButton btnAdd, btnFind;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+
+    NavigationView nv;
+
 
     // This class
     final Context context = this;
@@ -69,6 +78,11 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         // Initialise the components, each button etc.
         btnAdd = (ImageButton) findViewById(R.id.addButton);
         btnAdd.setOnClickListener(this);
+
+        nv = (NavigationView) findViewById(R.id.nv1);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_home_screen);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
 
         btnFind = (ImageButton) findViewById(R.id.findButton);
         btnFind.setVisibility(View.INVISIBLE);
@@ -124,7 +138,24 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);  //App name has gone lmao, look again later
 
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.nav_Atlas:
+                        Toast.makeText(getApplicationContext(), "Opening Atlas now", Toast.LENGTH_LONG).show();
+                }
+                return true;
+            }
+        });
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,14 +165,23 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         return super.onCreateOptionsMenu(menu);
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings_id:
-                Toast.makeText(getApplicationContext(), "Settings selected",Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.search_id:
-                startCalendarAnimation();
+        if(mToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+
+        else {
+            switch (item.getItemId()) {
+                case R.id.settings_id:
+                    Toast.makeText(getApplicationContext(), "Settings selected", Toast.LENGTH_LONG).show();
+                    return true;
+                case R.id.search_id:
+                    startCalendarAnimation();
+                    return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
