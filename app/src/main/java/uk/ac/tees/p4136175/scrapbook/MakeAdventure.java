@@ -315,6 +315,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                                 break;
 
                             case R.id.make_camera:
+                                System.out.println("Clicked");
                                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                                 photoPickerIntent.setType("image/*");
                                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -438,7 +439,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
             Bitmap image = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
             adv.image = getBytes(image);
-            adv.datetime = formattedDate;
+            adv.datetime = selectedDate;
             adv.loc_lang = "tester";
             adv.loc_lat = "tester";
 

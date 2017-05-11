@@ -86,7 +86,9 @@
             android:layout_alignStart="@+id/calendarView3"
             android:layout_marginTop="15dp"
             android:id="@+id/listView"
-            android:layout_above="@+id/addButton" />
+            android:layout_above="@+id/addButton"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="30.0sp"/>
 
     </RelativeLayout>
 
