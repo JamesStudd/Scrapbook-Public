@@ -17,12 +17,21 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * HomeScreen will be the first screen that the user views, it will hold:
@@ -39,6 +48,9 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     // btnFind = Search when a note is typed in
     Button btnList, btnSearch;
     ImageButton btnAdd, btnFind;
+    ListView listView;
+    TextView adventure_id;
+
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
@@ -133,7 +145,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()) {
+                switch (item.getItemId()) {
                     case R.id.nav_Atlas:
                         Toast.makeText(getApplicationContext(), "Opening Atlas now", Toast.LENGTH_LONG).show();
                 }
@@ -146,8 +158,11 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    }
 
+        listView = (ListView) findViewById(R.id.listView);
+        updateList();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,19 +173,21 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(mToggle.onOptionsItemSelected(item)){
+        if (mToggle.onOptionsItemSelected(item)) {
             return true;
-        }
-
-        else {
+        } else {
             switch (item.getItemId()) {
                 case R.id.settings_id:
                     Toast.makeText(getApplicationContext(), "Settings selected", Toast.LENGTH_LONG).show();
                     return true;
                 case R.id.search_id:
+                    if(listView.getVisibility() == View.INVISIBLE){
+                        listView.setVisibility(View.VISIBLE);
+                    } else {
+                        listView.setVisibility(View.INVISIBLE);
+                    }
                     startCalendarAnimation();
                     return true;
             }
@@ -189,8 +206,9 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     public void onClick(View v) {
         // If the 'Make Adventure' button is selected, the MakeAdventure activity is called
         if (v == findViewById(R.id.addButton)) {
+            System.out.println("Clicked");
             Intent intent = new Intent(context, MakeAdventure.class);
-            startActivity(intent);
+            startActivityForResult(intent,0);
             // If the find button is selected, the AdventureList activity is called whilst passing
             // in the current noteSearch string (search)
         } else if (v == findViewById(R.id.findButton)) {
@@ -223,7 +241,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     /**
      * Animates the 'Make Adventure' button as well as removing
      * the left arrow, right arrow and the calendar
-     *
      */
     public void startCalendarAnimation() {
         if (calendarShown) {
@@ -251,7 +268,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
      * @param state will either be '0' or '1', 0 = calendar, 1 = note
      */
     public void showWayOfSearching(int state) {
-        switch(state){
+        switch (state) {
             case 0: // Calendar
                 calendarView.setVisibility(View.VISIBLE);
                 noteSearch.setVisibility(View.INVISIBLE);
@@ -264,5 +281,49 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                 break;
         }
     }
+
+    private void updateList() {
+        // Initialise the repo
+        AdventureRepo repo = new AdventureRepo(this);
+
+        // Create an array list of hashmaps from the return of getAdventureEntryList,
+        // this returns the adventure Id and note text
+        ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
+        if (adventureList.size() != 0) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                /**
+                 * If an item is the listview is clicked
+                 * @param parent Parent component
+                 * @param view Item clicked
+                 * @param position Index of the item
+                 * @param id Id of the item
+                 */
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    // Get the adventureId from the adventureId component in view_adventure_entry
+                    adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
+                    String adventureId = adventure_id.getText().toString();
+                    Intent objIndent = new Intent(getApplicationContext(), MakeAdventure.class);
+                    objIndent.putExtra("adventure_Id", Integer.parseInt(adventureId));
+                    startActivity(objIndent);
+                }
+            });
+            ListAdapter adapter = new SimpleAdapter(HomeScreen.this, adventureList, R.layout.activity_view_adventure_entry, new String[]{"id", "note_text", "datetime"}, new int[]{R.id.adventure_Id, R.id.adventure_note, R.id.adventure_datetime});
+            listView.setAdapter(adapter);
+        } else {
+            Toast.makeText(this, "No adventures!", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("Doing this");
+        updateList();
+    }
+
 
 }
