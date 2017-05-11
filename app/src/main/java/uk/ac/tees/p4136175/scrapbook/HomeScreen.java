@@ -61,6 +61,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     AdventureRepo tempRepo = new AdventureRepo(this);
     String[] adventureNote;
     Bitmap[] adventureImage;
+    String[] adventureDate;
     int[] adventureIdArray;
     ImageAdapter imageAdapter;
     AdventureRepo repo;
@@ -107,6 +108,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
         // Use repo to initialise the imageAdapter
         imageAdapter = new ImageAdapter(this, repo);
+        imageAdapter.getImages();
 
         // This part of the code initializes 3 different arrays
         // adventureNote - holds each adventure note
@@ -114,18 +116,10 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         // adventureIdArray - holds each adventure ID
         // This way they are all the same index.
 
-        // Initialise the arrays for arrayadapter to the correct size
-        ArrayList<HashMap<String, Object>> tempList = tempRepo.getAdventureEntryGrid();
-        adventureNote = new String[tempList.size()];
-        adventureImage = new Bitmap[tempList.size()];
-        // Create an array the same size as the current adventure list size
-        adventureIdArray = new int[tempList.size()];
-        int count = 0;
-        // For each hashmap, get the ID of the entry and save it into the array just created
-        for(HashMap<String, Object> h : tempList){
-            adventureIdArray[count] = Integer.parseInt(String.valueOf(h.get("id")));
-            count++;
-        }
+
+
+        listView = (ListView) findViewById(R.id.listView);
+
         setArrays();
 
         // Initialise the components, each button etc.
@@ -201,9 +195,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
 
 
-
-        listView = (ListView) findViewById(R.id.listView);
-        updateList();
 
     }
 
@@ -327,7 +318,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
     private void updateList() {
 
-        CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage);
+        CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage, adventureDate);
         listView.setAdapter(adapter);
 
 //        // Initialise the repo
@@ -369,10 +360,24 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println("Doing this");
-        updateList();
+        setArrays();
     }
 
     private void setArrays(){
+        // Initialise the arrays for arrayadapter to the correct size
+        ArrayList<HashMap<String, Object>> tempList = tempRepo.getAdventureEntryGrid();
+        adventureNote = new String[tempList.size()];
+        adventureImage = new Bitmap[tempList.size()];
+        adventureDate = new String[tempList.size()];
+        // Create an array the same size as the current adventure list size
+        adventureIdArray = new int[tempList.size()];
+        int count = 0;
+        // For each hashmap, get the ID of the entry and save it into the array just created
+        for(HashMap<String, Object> h : tempList){
+            adventureIdArray[count] = Integer.parseInt(String.valueOf(h.get("id")));
+            count++;
+        }
+
         imageAdapter.getImages();
         List<Bitmap> images = imageAdapter.getImageList();
         for (int i = 0; i < adventureImage.length; i++){
@@ -385,7 +390,11 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         for (int i = 0; i <adventureNote.length ; i ++){
             HashMap<String, String> t = adventureList.get(i);
             adventureNote[i] = t.get("note_text");
+            System.out.println("Printing datetime : " + t.get("datetime"));
+            adventureDate[i] = t.get("datetime");
         }
+
+        updateList();
     }
 
 
