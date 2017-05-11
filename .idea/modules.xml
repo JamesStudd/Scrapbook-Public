@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/9thmayAPIKEY.iml" filepath="$PROJECT_DIR$/9thmayAPIKEY.iml" />
       <module fileurl="file://$PROJECT_DIR$/Scrapbook.iml" filepath="$PROJECT_DIR$/Scrapbook.iml" />
       <module fileurl="file://$PROJECT_DIR$/Scrapbook-Public.iml" filepath="$PROJECT_DIR$/Scrapbook-Public.iml" />
       <module fileurl="file://$PROJECT_DIR$/Scrapbook-Public.iml" filepath="$PROJECT_DIR$/Scrapbook-Public.iml" />
