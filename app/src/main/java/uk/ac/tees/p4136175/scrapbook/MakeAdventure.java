@@ -330,8 +330,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.println("Got to onOptionsItemSelected method");
             switch (item.getItemId()) {
                 case R.id.make_calendar_button:
+                    System.out.println("Doing this");
                     calendarView.setVisibility(View.VISIBLE);
                     changeComponents(View.INVISIBLE);
                     return true;
@@ -449,8 +451,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 repo.update(adv);
                 Toast.makeText(this, "Adventure Entry Updated", Toast.LENGTH_SHORT).show();
             }
-            finish();
             // If the component is the delete button
+
 //        } else if (v == findViewById(R.id.deleteButton)) {
 //            // Use the repo delete method
 //            AdventureRepo repo = new AdventureRepo(this);
@@ -458,6 +460,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 //            Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
 //            finish();
         }
+        Intent intent = new Intent();
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
 
