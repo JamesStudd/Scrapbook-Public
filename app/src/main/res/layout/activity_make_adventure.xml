@@ -5,6 +5,7 @@
     android:id="@+id/activity_make_adventure"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_alignBottom="@+id/calendarViewDate"
     tools:context="uk.ac.tees.p4136175.scrapbook.MakeAdventure">
 
     <android.support.v7.widget.Toolbar
@@ -22,14 +23,17 @@
             android:orientation="horizontal"
             android:showDividers="end">
 
-        <TextView
-            android:id="@+id/toolbar_save"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:drawableLeft="@drawable/ic_check_black_24dp"
-            android:gravity="center_vertical"
-            android:paddingRight="16dp" />
+            <TextView
+                android:id="@+id/toolbar_save"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:drawableLeft="@drawable/ic_check_black_24dp"
+                android:gravity="center_vertical"
+                android:paddingRight="16dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/toolbarDate"
@@ -47,59 +51,50 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <Button
-        android:text="Delete"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/deleteButton"
-        android:layout_marginBottom="88dp"
-        android:layout_alignBottom="@+id/calendarViewDate"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:text="Current Location: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/locationTextStatic"
-        android:layout_marginTop="15dp"
-        android:layout_alignTop="@+id/imageView" />
+        android:layout_above="@+id/adventureEntry"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/my_toolbar"
+        app:srcCompat="@drawable/biggreen" />
 
     <TextView
         android:id="@+id/locationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/imageView" />
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_alignRight="@+id/bottom_navigation"
+        android:paddingRight="10dp" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
         android:id="@+id/adventureEntry"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="39dp" />
-
-    <ImageView
-        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/adventureEntry"
-        android:layout_alignLeft="@+id/locationTextStatic"
-        android:layout_alignRight="@+id/adventureEntry"
-        android:layout_alignStart="@+id/locationTextStatic"
-        android:layout_below="@+id/adventureEntry"
-        android:layout_marginTop="85dp"
-        app:srcCompat="@drawable/biggreen" />
+        android:layout_above="@+id/locationText"
+        android:layout_alignEnd="@+id/calendarViewDate"
+        android:layout_alignLeft="@+id/calendarViewDate"
+        android:layout_alignRight="@+id/calendarViewDate"
+        android:layout_alignStart="@+id/calendarViewDate"
+        android:layout_alignTop="@+id/calendarViewDate"
+        android:layout_marginTop="45dp"
+        android:background="@null"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="Write here"
+        android:inputType="textMultiLine"
+        android:textColor="@color/place_autocomplete_prediction_secondary_text"
+        android:textSize="16sp" />
+
 
     <CalendarView
+        android:id="@+id/calendarViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/calendarViewDate"
-        android:layout_marginTop="46dp"
-        android:layout_below="@+id/adventureEntry"
+        android:layout_marginTop="80dp"
+        android:layout_below="@+id/my_toolbar"
         android:layout_centerHorizontal="true" />
 
     <android.support.design.widget.BottomNavigationView
@@ -119,5 +114,14 @@
         android:layout_alignParentBottom="true"
         android:text="Attribution"
         android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/locationText"
+        android:layout_below="@+id/adventureEntry"
+        android:layout_toLeftOf="@+id/locationText"
+        app:srcCompat="@drawable/ic_flag_black_24dp" />
 
 </RelativeLayout>
