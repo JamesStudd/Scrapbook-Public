@@ -79,9 +79,8 @@ import org.w3c.dom.Text;
  */
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
-    Button btnDelete;
     EditText makeEntry;
-    TextView toolbarDate, dateStatic, locationStatic, toolbarSave;
+    TextView toolbarDate, locationStatic, toolbarSave;
     String formattedDate;
     CalendarView calendarView;
     String selectedDate;
@@ -113,19 +112,11 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_make_adventure);
 
 
-        btnDelete = (Button) findViewById(R.id.deleteButton);
-        btnDelete.setOnClickListener(this);
-        btnDelete.setEnabled(false);
-        listOfComponents.add(btnDelete);
-
         makeEntry = (EditText) findViewById(R.id.adventureEntry);
         listOfComponents.add(makeEntry);
 
         toolbarSave = (TextView) findViewById(R.id.toolbar_save);
         toolbarSave.setOnClickListener(this);
-
-        locationStatic = (TextView) findViewById(R.id.locationTextStatic);
-        listOfComponents.add(locationStatic);
 
         locationText = (TextView) findViewById(R.id.locationText);
         listOfComponents.add(locationText);
@@ -170,7 +161,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         adv = repo.getAdventureById(_Adventure_Id);
 
         if(adv.note_text != null){
-            btnDelete.setEnabled(true);
             makeEntry.setText(String.valueOf(adv.note_text));
         }
 
@@ -461,13 +451,12 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
             finish();
             // If the component is the delete button
-        } else if (v == findViewById(R.id.deleteButton)) {
-            // Use the repo delete method
-            AdventureRepo repo = new AdventureRepo(this);
-            repo.delete(_Adventure_Id);
-            Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
-            finish();
-            // If the component is the cancel button
+//        } else if (v == findViewById(R.id.deleteButton)) {
+//            // Use the repo delete method
+//            AdventureRepo repo = new AdventureRepo(this);
+//            repo.delete(_Adventure_Id);
+//            Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
+//            finish();
         }
     }
 
