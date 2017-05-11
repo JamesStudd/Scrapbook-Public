@@ -16,112 +16,98 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:showDividers="end">
+
         <TextView
-            android:id="@+id/toolbarDate"
+            android:id="@+id/toolbar_save"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="DATE HERE"
-            android:textAppearance="@android:style/TextAppearance.Material.Title"
-            android:textColorLink="@color/common_google_signin_btn_text_dark_focused" />
-    </android.support.v7.widget.Toolbar>
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_check_black_24dp"
+            android:gravity="center_vertical"
+            android:paddingRight="16dp" />
 
-    <Button
-        android:text="Save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="57dp"
-        android:id="@+id/saveButton"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_above="@+id/wvAttribution"
-        android:layout_toLeftOf="@+id/deleteButton"
-        android:layout_toStartOf="@+id/deleteButton" />
+            <TextView
+                android:id="@+id/toolbarDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="63dp"
+                android:layout_marginStart="63dp"
+                android:text="DATE HERE"
+                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                android:textColorLink="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="25sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <Button
         android:text="Delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/deleteButton"
-        android:layout_alignBaseline="@+id/saveButton"
-        android:layout_alignBottom="@+id/saveButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginBottom="88dp"
+        android:layout_alignBottom="@+id/calendarViewDate"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:text="Current Location: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/locationTextStatic"
-        android:layout_marginBottom="43dp"
-        android:layout_above="@+id/saveButton"
-        android:layout_alignLeft="@+id/saveButton"
-        android:layout_alignStart="@+id/saveButton"
-        android:layout_marginLeft="36dp"
-        android:layout_marginStart="36dp" />
+        android:layout_marginTop="15dp"
+        android:layout_alignTop="@+id/imageView" />
 
     <TextView
+        android:id="@+id/locationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/locationText"
-        android:layout_alignBaseline="@+id/locationTextStatic"
-        android:layout_alignBottom="@+id/locationTextStatic"
-        android:layout_toRightOf="@+id/deleteButton"
-        android:layout_toEndOf="@+id/deleteButton" />
+        android:layout_alignTop="@id/imageView" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:inputType="textMultiLine"
         android:ems="10"
+        android:id="@+id/adventureEntry"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/saveButton"
-        android:layout_alignStart="@+id/saveButton"
-        android:id="@+id/adventureEntry" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="39dp" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/biggreen"
-        android:layout_below="@+id/adventureEntry"
-        android:layout_alignLeft="@+id/locationTextStatic"
-        android:layout_alignStart="@+id/locationTextStatic"
-        android:layout_marginTop="85dp"
         android:id="@+id/imageView"
-        android:layout_above="@+id/imageButton"
-        android:layout_alignRight="@+id/adventureEntry"
-        android:layout_alignEnd="@+id/adventureEntry" />
-
-    <Button
-        android:text="Choose Image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:id="@+id/imageButton"
-        android:layout_above="@+id/locationTextStatic"
-        android:layout_alignRight="@+id/locationTextStatic"
-        android:layout_alignEnd="@+id/locationTextStatic" />
+        android:layout_alignEnd="@+id/adventureEntry"
+        android:layout_alignLeft="@+id/locationTextStatic"
+        android:layout_alignRight="@+id/adventureEntry"
+        android:layout_alignStart="@+id/locationTextStatic"
+        android:layout_below="@+id/adventureEntry"
+        android:layout_marginTop="85dp"
+        app:srcCompat="@drawable/biggreen" />
 
     <CalendarView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:id="@+id/calendarViewDate"
-        android:layout_above="@+id/saveButton"
+        android:layout_marginTop="46dp"
+        android:layout_below="@+id/adventureEntry"
         android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/mapButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Map"
-        android:layout_below="@+id/imageView"
-        android:layout_alignRight="@+id/calendarViewDate"
-        android:layout_alignEnd="@+id/calendarViewDate" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:elevation="4dp"
         app:itemIconTint="@drawable/make_bottom_colors"
         app:itemTextColor="@drawable/make_bottom_colors"
         app:menu="@menu/make_bottom_nav" />

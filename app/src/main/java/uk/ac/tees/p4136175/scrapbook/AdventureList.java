@@ -100,6 +100,7 @@ public class AdventureList extends ListActivity implements View.OnClickListener{
 
     }
 
+
     /**
      * This will create a list of the current adventures
      * If switchstate is true, the list will be a gridview of the images from each adventure

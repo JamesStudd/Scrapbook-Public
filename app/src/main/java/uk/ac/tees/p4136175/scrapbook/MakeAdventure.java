@@ -71,16 +71,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 /**
  * This class is the longest, it allows for new adventures to be created but also
  * has other methods to get the current location, allow access to the image gallery
  */
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
-    Button btnSave, btnDelete;
-    ImageButton mapButton;
+    Button btnDelete;
     EditText makeEntry;
-    TextView toolbarDate, dateStatic, locationStatic;
+    TextView toolbarDate, dateStatic, locationStatic, toolbarSave;
     String formattedDate;
     CalendarView calendarView;
     String selectedDate;
@@ -111,13 +112,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_adventure);
 
-        // Get all the components of the UI
-        btnSave = (Button) findViewById(R.id.saveButton);
-        btnSave.setOnClickListener(this);
-        listOfComponents.add(btnSave);
-
-//        mapButton = (ImageButton) findViewById(R.id.make_bottom_map);
-//        mapButton.setOnClickListener(this);
 
         btnDelete = (Button) findViewById(R.id.deleteButton);
         btnDelete.setOnClickListener(this);
@@ -126,6 +120,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
         makeEntry = (EditText) findViewById(R.id.adventureEntry);
         listOfComponents.add(makeEntry);
+
+        toolbarSave = (TextView) findViewById(R.id.toolbar_save);
+        toolbarSave.setOnClickListener(this);
 
         locationStatic = (TextView) findViewById(R.id.locationTextStatic);
         listOfComponents.add(locationStatic);
@@ -212,17 +209,17 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        Button pickImage = (Button) findViewById(R.id.imageButton);
-        pickImage.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-            }
-        });
-        listOfComponents.add(pickImage);
+//        Button pickImage = (Button) findViewById(R.id.imageButton);
+//        pickImage.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+//                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+//                photoPickerIntent.setType("image/*");
+//                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+//            }
+//        });
+//        listOfComponents.add(pickImage);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -316,7 +313,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bottomNav.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -326,6 +322,12 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                             case R.id.make_map:
                                 Intent intent = new Intent(context, MapSearch.class);
                                 startActivity(intent);
+                                break;
+
+                            case R.id.make_camera:
+                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                photoPickerIntent.setType("image/*");
+                                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
                                 break;
                         }
                         return false;
@@ -432,7 +434,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
 
         // if the component is the save button
-        if (v == findViewById(R.id.saveButton)) {
+        if (v == findViewById(R.id.toolbar_save)) {
 
             // Create a local repo and a blank adventure
             AdventureRepo repo = new AdventureRepo(this);
@@ -457,7 +459,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 repo.update(adv);
                 Toast.makeText(this, "Adventure Entry Updated", Toast.LENGTH_SHORT).show();
             }
-            // Unregister the location broadcast so the program doesn't crash
             finish();
             // If the component is the delete button
         } else if (v == findViewById(R.id.deleteButton)) {
@@ -467,12 +468,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
             finish();
             // If the component is the cancel button
-
-//        } else if (v == findViewById(R.id.mapButton)) {
-//            Intent intent = new Intent(context, MapSearch.class);
-//            startActivity(intent);
-//
-//        }
         }
     }
 
