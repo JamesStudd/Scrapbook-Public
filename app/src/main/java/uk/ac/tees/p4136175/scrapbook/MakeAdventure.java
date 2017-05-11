@@ -155,11 +155,11 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 selectedDate = dayOfMonth + " " + monthNames[month] + " " + year;
                 changeComponents(View.VISIBLE);
 
-                if(!Objects.equals(selectedDate, dateFormat.format(date))){
-                    dateStatic.setText("Chosen Date:");
-                } else {
-                    dateStatic.setText("Current Date:");
-                }
+//                if(!Objects.equals(selectedDate, dateFormat.format(date))){
+//                    dateStatic.setText("Chosen Date:");
+//                } else {
+//                    dateStatic.setText("Current Date:");
+//                }
                 toolbarDate.setText(selectedDate);
             }
         });

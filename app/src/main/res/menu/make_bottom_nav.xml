@@ -11,9 +11,9 @@
         android:title="Location"
         android:icon="@drawable/ic_place_black_24dp"/>
 
-    <item
-        android:id="@+id/make_weather"
-        android:title="Weather"
-        android:icon="@drawable/ic_cloud_black_24dp"/>
+    <!--<item-->
+        <!--android:id="@+id/make_weather"-->
+        <!--android:title="Weather"-->
+        <!--android:icon="@drawable/ic_cloud_black_24dp"/>-->
 
 </menu>

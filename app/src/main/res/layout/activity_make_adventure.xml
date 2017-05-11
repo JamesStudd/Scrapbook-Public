@@ -122,6 +122,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        app:itemIconTint="@drawable/make_bottom_colors"
+        app:itemTextColor="@drawable/make_bottom_colors"
         app:menu="@menu/make_bottom_nav" />
 
     <WebView
