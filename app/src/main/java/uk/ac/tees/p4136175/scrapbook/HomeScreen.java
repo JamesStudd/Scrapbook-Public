@@ -321,6 +321,24 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage, adventureDate);
         listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                /**
+                 * If an item is the listview is clicked
+                 * @param parent Parent component
+                 * @param view Item clicked
+                 * @param position Index of the item
+                 * @param id Id of the item
+                 */
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    // Get the adventureId from the adventureId component in view_adventure_entry
+                    Intent objIndent = new Intent(getApplicationContext(), MakeAdventure.class);
+                    objIndent.putExtra("adventure_Id", adventureIdArray[position]);
+                    startActivity(objIndent);
+                }
+            });
+
 //        // Initialise the repo
 //        AdventureRepo repo = new AdventureRepo(this);
 //
@@ -364,16 +382,18 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     }
 
     private void setArrays(){
-        // Initialise the arrays for arrayadapter to the correct size
-        ArrayList<HashMap<String, Object>> tempList = tempRepo.getAdventureEntryGrid();
-        adventureNote = new String[tempList.size()];
-        adventureImage = new Bitmap[tempList.size()];
-        adventureDate = new String[tempList.size()];
+        AdventureRepo repo = new AdventureRepo(this);
+        ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
+
+
+        adventureNote = new String[adventureList.size()];
+        adventureImage = new Bitmap[adventureList.size()];
+        adventureDate = new String[adventureList.size()];
         // Create an array the same size as the current adventure list size
-        adventureIdArray = new int[tempList.size()];
+        adventureIdArray = new int[adventureList.size()];
         int count = 0;
         // For each hashmap, get the ID of the entry and save it into the array just created
-        for(HashMap<String, Object> h : tempList){
+        for(HashMap<String, String> h : adventureList){
             adventureIdArray[count] = Integer.parseInt(String.valueOf(h.get("id")));
             count++;
         }
@@ -384,8 +404,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             adventureImage[i] = images.get(i);
         }
 
-        AdventureRepo repo = new AdventureRepo(this);
-        ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
+
 
         for (int i = 0; i <adventureNote.length ; i ++){
             HashMap<String, String> t = adventureList.get(i);
