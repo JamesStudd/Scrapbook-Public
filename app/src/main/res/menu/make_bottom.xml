@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageButton
+        android:id="@+id/make_bottom_map"
+        android:title="Location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_place_black_24dp"
+        android:background="@null"
+        />
+
+    <ImageButton
+        android:id="@+id/make_bottom_camera"
+        android:title="Camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_camera_alt_black_24dp"
+        android:background="@null"
+        />
+
+    <ImageButton
+        android:id="@+id/make_bottom_weather"
+        android:title="Weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_cloud_black_24dp"
+        android:background="@null"
+        />
+
+</menu>

@@ -18,6 +18,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,17 +26,26 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,9 +77,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
-    Button btnSave, btnCancel, btnDelete, mapButton;
+    Button btnSave, btnDelete;
+    ImageButton mapButton;
     EditText makeEntry;
-    TextView dateTextView, dateStatic, locationStatic;
+    TextView toolbarDate, dateStatic, locationStatic;
     String formattedDate;
     CalendarView calendarView;
     String selectedDate;
@@ -105,23 +116,16 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         btnSave.setOnClickListener(this);
         listOfComponents.add(btnSave);
 
-        mapButton = (Button) findViewById(R.id.mapButton);
-        mapButton.setOnClickListener(this);
+//        mapButton = (ImageButton) findViewById(R.id.make_bottom_map);
+//        mapButton.setOnClickListener(this);
 
         btnDelete = (Button) findViewById(R.id.deleteButton);
         btnDelete.setOnClickListener(this);
         btnDelete.setEnabled(false);
         listOfComponents.add(btnDelete);
 
-        btnCancel = (Button) findViewById(R.id.cancelButton);
-        btnCancel.setOnClickListener(this);
-        listOfComponents.add(btnCancel);
-
         makeEntry = (EditText) findViewById(R.id.adventureEntry);
         listOfComponents.add(makeEntry);
-
-        dateStatic = (TextView) findViewById(R.id.dateTextStatic);
-        listOfComponents.add(dateStatic);
 
         locationStatic = (TextView) findViewById(R.id.locationTextStatic);
         listOfComponents.add(locationStatic);
@@ -131,6 +135,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
         mImageView = (ImageView) findViewById(R.id.imageView);
         listOfComponents.add(mImageView);
+
+        toolbarDate = (TextView) findViewById(R.id.toolbarDate);
 
         dateFormat = new SimpleDateFormat("dd MMM yyyy");
         date = new Date();
@@ -154,21 +160,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 } else {
                     dateStatic.setText("Current Date:");
                 }
-                dateTextView.setText(selectedDate);
+                toolbarDate.setText(selectedDate);
             }
         });
 
-
-
-        dateTextView = (TextView) findViewById(R.id.dateText);
-        dateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calendarView.setVisibility(View.VISIBLE);
-                changeComponents(View.INVISIBLE);
-            }
-        });
-        listOfComponents.add(dateTextView);
 
         _Adventure_Id =0;
         Intent intent = getIntent();
@@ -190,7 +185,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             System.out.println("adv image was null.");
         }
 
-        dateTextView.setText(selectedDate);
+        toolbarDate.setText(selectedDate);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -317,7 +312,43 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             });
         }
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        bottomNav.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.make_map:
+                                Intent intent = new Intent(context, MapSearch.class);
+                                startActivity(intent);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
     }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.make_calendar_button:
+                    calendarView.setVisibility(View.VISIBLE);
+                    changeComponents(View.INVISIBLE);
+                    return true;
+            }
+        return super.onOptionsItemSelected(item);
+        }
+
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -373,7 +404,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.activity_make_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     public String getRealPathFromURI(Uri contentUri) {
@@ -397,9 +431,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
 
 
-
         // if the component is the save button
-        if(v == findViewById(R.id.saveButton)){
+        if (v == findViewById(R.id.saveButton)) {
 
             // Create a local repo and a blank adventure
             AdventureRepo repo = new AdventureRepo(this);
@@ -416,34 +449,33 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             adv.loc_lat = "tester";
 
             // If the adventure is new, insert it into the DB
-            if(_Adventure_Id == 0){
+            if (_Adventure_Id == 0) {
                 _Adventure_Id = repo.insert(adv);
                 Toast.makeText(this, "New Adventure Created", Toast.LENGTH_SHORT).show();
-            // If the adventure is exisiting already, just update it
+                // If the adventure is exisiting already, just update it
             } else {
                 repo.update(adv);
                 Toast.makeText(this, "Adventure Entry Updated", Toast.LENGTH_SHORT).show();
             }
             // Unregister the location broadcast so the program doesn't crash
             finish();
-        // If the component is the delete button
-        } else if (v == findViewById(R.id.deleteButton)){
+            // If the component is the delete button
+        } else if (v == findViewById(R.id.deleteButton)) {
             // Use the repo delete method
             AdventureRepo repo = new AdventureRepo(this);
             repo.delete(_Adventure_Id);
             Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
             finish();
-        // If the component is the cancel button
-        } else if (v == findViewById(R.id.cancelButton)){
-            // Unregister the broadcast receiver then end the intent
-            finish();
+            // If the component is the cancel button
 
-        } else if (v == findViewById(R.id.mapButton)) {
-            Intent intent = new Intent(context, MapSearch.class);
-            startActivity(intent);
-
+//        } else if (v == findViewById(R.id.mapButton)) {
+//            Intent intent = new Intent(context, MapSearch.class);
+//            startActivity(intent);
+//
+//        }
         }
     }
+
 
     /**
      * THis converts a bitmap to a byte[] array

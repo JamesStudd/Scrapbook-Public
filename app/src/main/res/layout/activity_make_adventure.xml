@@ -14,31 +14,28 @@
         android:background="#04B404"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:id="@+id/toolbarDate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="DATE HERE"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textColorLink="@color/common_google_signin_btn_text_dark_focused" />
+    </android.support.v7.widget.Toolbar>
 
     <Button
         android:text="Save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="57dp"
         android:id="@+id/saveButton"
-        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_above="@+id/wvAttribution"
         android:layout_toLeftOf="@+id/deleteButton"
-        android:layout_toStartOf="@+id/deleteButton"
-        android:layout_marginRight="12dp"
-        android:layout_marginEnd="12dp" />
-
-    <Button
-        android:text="Cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="33dp"
-        android:layout_marginEnd="33dp"
-        android:id="@+id/cancelButton"
-        android:layout_alignBaseline="@+id/saveButton"
-        android:layout_alignBottom="@+id/saveButton"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_toStartOf="@+id/deleteButton" />
 
     <Button
         android:text="Delete"
@@ -70,26 +67,6 @@
         android:layout_toRightOf="@+id/deleteButton"
         android:layout_toEndOf="@+id/deleteButton" />
 
-    <TextView
-        android:text="Current Date:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/locationTextStatic"
-        android:layout_alignLeft="@+id/locationTextStatic"
-        android:layout_alignStart="@+id/locationTextStatic"
-        android:layout_marginLeft="23dp"
-        android:layout_marginStart="23dp"
-        android:id="@+id/dateTextStatic" />
-
-    <TextView
-        android:text="date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/locationTextStatic"
-        android:layout_alignLeft="@+id/locationText"
-        android:layout_alignStart="@+id/locationText"
-        android:id="@+id/dateText" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="100dp"
@@ -98,9 +75,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/saveButton"
         android:layout_alignStart="@+id/saveButton"
-        android:id="@+id/adventureEntry"
-        android:layout_alignRight="@+id/cancelButton"
-        android:layout_alignEnd="@+id/cancelButton" />
+        android:id="@+id/adventureEntry" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -119,20 +94,19 @@
         android:text="Choose Image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="21dp"
+        android:layout_marginBottom="17dp"
         android:id="@+id/imageButton"
-        android:layout_above="@+id/dateTextStatic"
-        android:layout_toRightOf="@+id/saveButton"
-        android:layout_toEndOf="@+id/saveButton" />
+        android:layout_above="@+id/locationTextStatic"
+        android:layout_alignRight="@+id/locationTextStatic"
+        android:layout_alignEnd="@+id/locationTextStatic" />
 
     <CalendarView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
+        android:layout_marginBottom="15dp"
         android:id="@+id/calendarViewDate"
         android:layout_above="@+id/saveButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/mapButton"
@@ -142,6 +116,13 @@
         android:layout_below="@+id/imageView"
         android:layout_alignRight="@+id/calendarViewDate"
         android:layout_alignEnd="@+id/calendarViewDate" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/make_bottom_nav" />
 
     <WebView
         android:id="@+id/wvAttribution"

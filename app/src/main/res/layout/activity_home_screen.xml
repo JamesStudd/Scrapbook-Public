@@ -86,7 +86,7 @@
         android:id="@+id/nv1"
         app:menu="@menu/navigation_menu"
         android:layout_gravity="start"
-        app:headerLayout="@layout/navigation_header">+
+        app:headerLayout="@layout/navigation_header">
     </android.support.design.widget.NavigationView>
 
 
