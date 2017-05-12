@@ -98,6 +98,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     private Uri mImageCaptureUri;
     private ImageView mImageView;
 
+    private final static int MY_PERMISSION_FINE_LOCATION = 104;
+    private final static int PLACE_PICKER_REQUEST = 107;
+
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
@@ -223,7 +226,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             return;
         }
         if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     double latitude = location.getLatitude();
@@ -261,7 +264,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             });
         }
         else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     double latitude = location.getLatitude();
@@ -310,8 +313,16 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.make_map:
-                                Intent intent = new Intent(context, MapSearch.class);
-                                startActivity(intent);
+                                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                                try {
+                                    Intent intent = builder.build(MakeAdventure.this);
+                                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                                } catch (GooglePlayServicesRepairableException e) {
+                                    e.printStackTrace();
+                                } catch (GooglePlayServicesNotAvailableException e) {
+                                    e.printStackTrace();
+                                }
+
                                 break;
 
                             case R.id.make_camera:
@@ -324,6 +335,15 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     }
                 });
 
+    }
+
+    private void requestPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
+            }
+        }
     }
 
 
@@ -361,6 +381,13 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 }
                 return;
             }
+
+            case MY_PERMISSION_FINE_LOCATION: {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
         }
     }
 
@@ -377,9 +404,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         // Switch case for the request code
         switch(requestCode) {
             // if the request is to select a photo
-            case SELECT_PHOTO:
+            case SELECT_PHOTO: {
                 // if the result code is successful
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     final Uri imageUri = imageReturnedIntent.getData();
                     InputStream imageStream = null;
                     try {
@@ -391,6 +418,20 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     mImageView.setImageBitmap(selectedImage);
 
                 }
+            }
+            case PLACE_PICKER_REQUEST: {
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(MakeAdventure.this, imageReturnedIntent);
+                    locationText.setText(place.getAddress());
+
+                    if (place.getAttributions() == null) {
+                        attributionText.loadData("no attribution", "text/html; charset=utf-8", "UFT-8");
+                    }else {
+                        attributionText.loadData(place.getAttributions().toString(), "text/html; charset=utf-8", "UFT-8");
+                    }
+                }
+            }
+
         }
     }
 

@@ -61,15 +61,6 @@
         android:layout_height="wrap_content"
         tools:context="uk.ac.tees.p4136175.scrapbook.MapSearch" />
 
-    <WebView
-        android:id="@+id/wvAttribution"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Attribution"
-        android:textSize="16sp" />
-
 
 </LinearLayout>
 
