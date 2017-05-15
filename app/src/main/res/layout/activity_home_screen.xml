@@ -78,6 +78,18 @@
         android:layout_alignRight="@+id/calendarView3"
         android:layout_alignEnd="@+id/calendarView3" />
 
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/my_toolbar"
+            android:layout_alignLeft="@+id/calendarView3"
+            android:layout_alignStart="@+id/calendarView3"
+            android:layout_marginTop="15dp"
+            android:id="@+id/listView"
+            android:layout_above="@+id/addButton"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="30.0sp"/>
+
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
