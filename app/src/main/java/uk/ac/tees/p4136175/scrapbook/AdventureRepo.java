@@ -154,7 +154,7 @@ public class AdventureRepo {
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             do {
                 HashMap<String, Object> adventureEntry = new HashMap<String, Object>();
                 adventureEntry.put("id", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_ID)));

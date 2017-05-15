@@ -124,12 +124,5 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <Button
-        android:text="Delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_navigation"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/deleteButton" />
 
 </RelativeLayout>
