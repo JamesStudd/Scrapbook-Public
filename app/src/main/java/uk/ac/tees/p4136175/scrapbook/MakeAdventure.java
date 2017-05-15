@@ -92,6 +92,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     LocationManager locationManager;
     public static TextView locationText;
     Button btnDelete;
+    String currentLocation = "none";
 
     private int _Adventure_Id=0;
 
@@ -291,6 +292,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                         //Loads of methods using .get to get different info about the location
                         String str = addressList.get(0).getLocality()+", ";
                         str += addressList.get(0).getCountryName();
+                        currentLocation = str;
                         locationText.setText(str);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -327,8 +329,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     try {
                         List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
                         //Loads of methods using .get to get different info about the location
+
                         String str = addressList.get(0).getLocality()+", ";
                         str += addressList.get(0).getCountryName();
+                        currentLocation = str;
                         locationText.setText(str);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -444,7 +448,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             case PLACE_PICKER_REQUEST: {
                 if (resultCode == RESULT_OK) {
                     Place place = PlacePicker.getPlace(MakeAdventure.this, imageReturnedIntent);
-                    System.out.println(place);
+
+                    currentLocation = String.valueOf(place.getAddress());
                     locationText.setText(place.getAddress());
 
                     if (place.getAttributions() == null) {
@@ -501,8 +506,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             Bitmap image = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
             adv.image = getBytes(image);
             adv.datetime = selectedDate;
-            adv.loc_lang = "tester";
-            adv.loc_lat = "tester";
+            System.out.println(currentLocation);
+            adv.loc_name = currentLocation;
 
             // If the adventure is new, insert it into the DB
             if (_Adventure_Id == 0) {
