@@ -46,7 +46,6 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private final static int PLACE_PICKER_REQUEST = 102;
     TextView chosenLocation;
-    WebView attributionText;
     Marker marker;
     TextView locationText;
 
@@ -178,34 +177,6 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PLACE_PICKER_REQUEST){
-            if (resultCode == RESULT_OK){
-                Place place = PlacePicker.getPlace(MapSearch.this, data);
-                String address = String.format("Place: %s",place.getAddress());
-                MakeAdventure.locationText.setText(address);
-                if (place.getAttributions() == null) {
-                    attributionText.loadData("no attribution", "text/html; charset=utf-8", "UFT-8");
-                } else {
-                    attributionText.loadData(place.getAttributions().toString(), "text/html; charset=utf-8", "UFT-8");
-                }
-            }
-        }
-    }
-
-    protected void activatePicker() {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        try {
-            Intent intent = builder.build(MapSearch.this);
-            startActivityForResult(intent, PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void onSearch(View view) {
