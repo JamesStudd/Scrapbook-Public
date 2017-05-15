@@ -159,6 +159,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         });
 
 
+        requestPermission();
+
         _Adventure_Id =0;
         Intent intent = getIntent();
         _Adventure_Id =intent.getIntExtra("adventure_Id", 0);
@@ -349,8 +351,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 }
             });
         }
-
-        System.out.println("Doing this");
 
 
 
