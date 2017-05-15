@@ -62,6 +62,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     String[] adventureNote;
     Bitmap[] adventureImage;
     String[] adventureDate;
+    String[] adventureLocation;
     int[] adventureIdArray;
     ImageAdapter imageAdapter;
     AdventureRepo repo;
@@ -318,7 +319,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
     private void updateList() {
 
-        CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage, adventureDate);
+        CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage, adventureDate,adventureLocation);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -389,6 +390,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         adventureNote = new String[adventureList.size()];
         adventureImage = new Bitmap[adventureList.size()];
         adventureDate = new String[adventureList.size()];
+        adventureLocation = new String[adventureList.size()];
         // Create an array the same size as the current adventure list size
         adventureIdArray = new int[adventureList.size()];
         int count = 0;
@@ -405,13 +407,14 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         }
 
 
-
         for (int i = 0; i <adventureNote.length ; i ++){
             HashMap<String, String> t = adventureList.get(i);
             adventureNote[i] = t.get("note_text");
-            System.out.println("Printing datetime : " + t.get("datetime"));
             adventureDate[i] = t.get("datetime");
+            adventureLocation[i] = t.get("location");
         }
+
+
 
         updateList();
     }

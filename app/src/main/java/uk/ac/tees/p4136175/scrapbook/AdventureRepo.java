@@ -40,8 +40,7 @@ public class AdventureRepo {
         values.put(adv.KEY_note, adv.note_text);
         values.put(adv.KEY_image, adv.image);
         values.put(adv.KEY_datetime, adv.datetime);
-        values.put(adv.KEY_loc_lat, adv.loc_lat);
-        values.put(adv.KEY_loc_long, adv.loc_lang);
+        values.put(adv.KEY_loc_name, adv.loc_name);
 
         long adv_Id = db.insert(adv.TABLE, null, values);
         db.close();
@@ -73,8 +72,8 @@ public class AdventureRepo {
         values.put(adv.KEY_note, adv.note_text);
         values.put(adv.KEY_image, adv.image);
         values.put(adv.KEY_datetime, adv.datetime);
-        values.put(adv.KEY_loc_lat, adv.loc_lat);
-        values.put(adv.KEY_loc_long, adv.loc_lang);
+        values.put(adv.KEY_loc_name, adv.loc_name);
+
 
         // It's a good practice to use parameter ?, instead of concatenate string
         db.update(adv.TABLE, values, adv.KEY_ID + "= ?", new String[] { String.valueOf(adv.ID) });
@@ -95,8 +94,7 @@ public class AdventureRepo {
                 AdventureEntry.KEY_note + "," +
                 AdventureEntry.KEY_image + "," +
                 AdventureEntry.KEY_datetime + "," +
-                AdventureEntry.KEY_loc_long + "," +
-                AdventureEntry.KEY_loc_lat +
+                AdventureEntry.KEY_loc_name +
                 " FROM " + AdventureEntry.TABLE;
 
         // Initiallise the list to be returned
@@ -122,6 +120,7 @@ public class AdventureRepo {
                 }
                 adventureEntry.put("note_text", temp);
                 adventureEntry.put("datetime", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_datetime)));
+                adventureEntry.put("location", cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_loc_name)));
                 adventureEntryList.add(adventureEntry);
 
             } while (cursor.moveToNext()); // whilst there are still entries to go to
@@ -147,8 +146,7 @@ public class AdventureRepo {
                 AdventureEntry.KEY_note + "," +
                 AdventureEntry.KEY_image + "," +
                 AdventureEntry.KEY_datetime + "," +
-                AdventureEntry.KEY_loc_long + "," +
-                AdventureEntry.KEY_loc_lat +
+                AdventureEntry.KEY_loc_name +
                 " FROM " + AdventureEntry.TABLE;
 
         ArrayList<HashMap<String, Object>> adventureEntryGrid = new ArrayList<HashMap<String, Object>>();
@@ -183,8 +181,7 @@ public class AdventureRepo {
                 AdventureEntry.KEY_note + "," +
                 AdventureEntry.KEY_image + "," +
                 AdventureEntry.KEY_datetime + "," +
-                AdventureEntry.KEY_loc_long + "," +
-                AdventureEntry.KEY_loc_lat +
+                AdventureEntry.KEY_loc_name +
                 " FROM " + AdventureEntry.TABLE
                 + " WHERE " +
                 AdventureEntry.KEY_ID + "=?";// It's a good practice to use parameter ?, instead of concatenate string
@@ -210,11 +207,9 @@ public class AdventureRepo {
                 aEntry.datetime = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_datetime));
                 //System.out.println("datetime: " + aEntry.datetime);
 
-                aEntry.loc_lat = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_loc_lat));
+                aEntry.loc_name = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_loc_name));
                 //System.out.println("loc lat: " + aEntry.loc_lat);
 
-                aEntry.loc_lang = cursor.getString(cursor.getColumnIndex(AdventureEntry.KEY_loc_long));
-                //System.out.println("loc lang: " + aEntry.loc_lang);
 
             } while (cursor.moveToNext());
         }

@@ -10,21 +10,19 @@ package uk.ac.tees.p4136175.scrapbook;
 public class AdventureEntry {
 
     // Name of the table that will be used
-    public static final String TABLE = "AdventureEntry";
+    public static final String TABLE = "AdventureEntryNew";
 
     // Labels Table Column Names
     public static final String KEY_ID = "_id";
     public static final String KEY_note = "notetext";
     public static final String KEY_image = "image";
     public static final String KEY_datetime = "datetime";
-    public static final String KEY_loc_long = "loc_long";
-    public static final String KEY_loc_lat = "loc_lat";
+    public static final String KEY_loc_name = "loc_name";
 
     // property help us to keep data
     public int ID;
     public String note_text;
     public byte[] image;
     public String datetime;
-    public String loc_lang;
-    public String loc_lat;
+    public String loc_name;
 }

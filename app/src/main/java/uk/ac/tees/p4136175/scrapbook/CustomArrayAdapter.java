@@ -17,9 +17,10 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
     private final Activity context;
     private final String[] itemname;
     private final String[] date;
+    private final String[] location;
     private final Bitmap[] img;
 
-    public CustomArrayAdapter(Activity context, String[] itemname, Bitmap[] img, String[] date) {
+    public CustomArrayAdapter(Activity context, String[] itemname, Bitmap[] img, String[] date, String[] location) {
         super(context, R.layout.mylist, itemname);
         // TODO Auto-generated constructor stub
 
@@ -27,6 +28,7 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
         this.itemname=itemname;
         this.img=img;
         this.date = date;
+        this.location = location;
     }
 
     public View getView(int position,View view,ViewGroup parent) {
@@ -41,7 +43,7 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
         txtDate.setText(date[position]);
         txtTitle.setText(itemname[position]);
         imageView.setImageBitmap(img[position]);
-        extratxt.setText("Location: ");
+        extratxt.setText("Location: " + location[position]);
         return rowView;
 
     };
