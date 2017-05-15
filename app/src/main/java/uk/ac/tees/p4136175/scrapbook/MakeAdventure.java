@@ -91,6 +91,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     final Context context = this;
     LocationManager locationManager;
     public static TextView locationText;
+    Button btnDelete;
 
     private int _Adventure_Id=0;
 
@@ -198,6 +199,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 // result of the request.
             }
         }
+
+        btnDelete = (Button) findViewById(R.id.deleteButton);
+        btnDelete.setOnClickListener(this);
 
 //        Button pickImage = (Button) findViewById(R.id.imageButton);
 //        pickImage.setOnClickListener(new View.OnClickListener() {
@@ -308,6 +312,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        System.out.println("Got to the method");
                         switch (item.getItemId()) {
                             case R.id.make_map:
                                 Intent intent = new Intent(context, MapSearch.class);
@@ -315,7 +320,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                                 break;
 
                             case R.id.make_camera:
-                                System.out.println("Clicked");
+                                System.out.println("Clicked the make camera button");
                                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                                 photoPickerIntent.setType("image/*");
                                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -454,12 +459,11 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
             // If the component is the delete button
 
-//        } else if (v == findViewById(R.id.deleteButton)) {
-//            // Use the repo delete method
-//            AdventureRepo repo = new AdventureRepo(this);
-//            repo.delete(_Adventure_Id);
-//            Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
-//            finish();
+        } else if (v == findViewById(R.id.deleteButton)) {
+            // Use the repo delete method
+            AdventureRepo repo = new AdventureRepo(this);
+            repo.delete(_Adventure_Id);
+            Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
         }
         Intent intent = new Intent();
         setResult(RESULT_OK,intent);
