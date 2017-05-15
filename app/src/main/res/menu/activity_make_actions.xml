@@ -15,4 +15,9 @@
         <!--change never to always to show/hide the icons-->
     </item>
 
+    <item android:id="@+id/make_delete_opt"
+        android:title="Delete"
+        app:showAsAction="never">
+    </item>
+
 </menu>

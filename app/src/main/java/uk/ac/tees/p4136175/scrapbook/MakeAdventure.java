@@ -207,20 +207,16 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        btnDelete = (Button) findViewById(R.id.deleteButton);
-        btnDelete.setOnClickListener(this);
 
         System.out.println("Made the delete button");
 
-        //Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNav.bringToFront();
-        bottomNav.requestFocus();
 
         System.out.println("Bottom Nav: " + bottomNav +
                 "\n" + "Other stuff: " + bottomNav.getMenu());
 
-        //setSupportActionBar(myToolbar);
+        setSupportActionBar(myToolbar);
 
         bottomNav.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -376,6 +372,15 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     calendarView.setVisibility(View.VISIBLE);
                     changeComponents(View.INVISIBLE);
                     return true;
+
+                case R.id.make_delete_opt:
+                    // Use the repo delete method
+                    System.out.println("deleting shit");
+                    AdventureRepo repo = new AdventureRepo(this);
+                    repo.delete(_Adventure_Id);
+                    Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
+                    return true;
+
             }
         return super.onOptionsItemSelected(item);
         }
@@ -515,11 +520,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
             // If the component is the delete button
 
-        } else if (v == findViewById(R.id.deleteButton)) {
-            // Use the repo delete method
-            AdventureRepo repo = new AdventureRepo(this);
-            repo.delete(_Adventure_Id);
-            Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
         }
         Intent intent = new Intent();
         setResult(RESULT_OK,intent);
