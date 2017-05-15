@@ -109,6 +109,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     private final int SELECT_PHOTO = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
 
+    BottomNavigationView bottomNav;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +207,48 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
         btnDelete = (Button) findViewById(R.id.deleteButton);
         btnDelete.setOnClickListener(this);
+
+        System.out.println("Made the delete button");
+
+        //Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNav.bringToFront();
+        bottomNav.requestFocus();
+
+        System.out.println("Bottom Nav: " + bottomNav +
+                "\n" + "Other stuff: " + bottomNav.getMenu());
+
+        //setSupportActionBar(myToolbar);
+
+        bottomNav.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        System.out.println("Got to the method");
+                        switch (item.getItemId()) {
+                            case R.id.make_map:
+                                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                                try {
+                                    Intent intent = builder.build(MakeAdventure.this);
+                                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                                } catch (GooglePlayServicesRepairableException e) {
+                                    e.printStackTrace();
+                                } catch (GooglePlayServicesNotAvailableException e) {
+                                    e.printStackTrace();
+                                }
+
+                                break;
+
+                            case R.id.make_camera:
+                                System.out.println("Clicked the make camera button");
+                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                photoPickerIntent.setType("image/*");
+                                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
 //        Button pickImage = (Button) findViewById(R.id.imageButton);
 //        pickImage.setOnClickListener(new View.OnClickListener() {
@@ -306,40 +350,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             });
         }
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        System.out.println("Doing this");
 
-        setSupportActionBar(myToolbar);
 
-        bottomNav.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        System.out.println("Got to the method");
-                        switch (item.getItemId()) {
-                            case R.id.make_map:
-                                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                                try {
-                                    Intent intent = builder.build(MakeAdventure.this);
-                                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
-                                } catch (GooglePlayServicesRepairableException e) {
-                                    e.printStackTrace();
-                                } catch (GooglePlayServicesNotAvailableException e) {
-                                    e.printStackTrace();
-                                }
-
-                                break;
-
-                            case R.id.make_camera:
-                                System.out.println("Clicked the make camera button");
-                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                                photoPickerIntent.setType("image/*");
-                                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-                                break;
-                        }
-                        return false;
-                    }
-                });
 
     }
 
@@ -426,10 +439,12 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     mImageView.setImageBitmap(selectedImage);
 
                 }
+                break;
             }
             case PLACE_PICKER_REQUEST: {
                 if (resultCode == RESULT_OK) {
                     Place place = PlacePicker.getPlace(MakeAdventure.this, imageReturnedIntent);
+                    System.out.println(place);
                     locationText.setText(place.getAddress());
 
                     if (place.getAttributions() == null) {
