@@ -19,7 +19,17 @@
         android:background="#04B404"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:id="@+id/noteSearch" />
+
+    </android.support.v7.widget.Toolbar>
 
 
     <CalendarView
@@ -47,14 +57,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="300dp"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:id="@+id/noteSearch"
-        android:layout_marginTop="200dp"/>
+
 
     <ImageButton
         android:id="@+id/addButton"

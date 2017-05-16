@@ -79,6 +79,9 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     // The calendar view, used for searching
     CalendarView calendarView;
 
+    //Toolbar
+    Toolbar myToolbar;
+
     // Is the calendar currently shown?
     boolean calendarShown = false;
 
@@ -175,8 +178,9 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         noteSearch = (EditText) findViewById(R.id.noteSearch);
         noteSearch.setVisibility(View.INVISIBLE);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        myToolbar.setLogo(R.drawable.snippetgreen);
 
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -219,12 +223,26 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                     Toast.makeText(getApplicationContext(), "Settings selected", Toast.LENGTH_LONG).show();
                     return true;
                 case R.id.search_id:
-                    if(listView.getVisibility() == View.INVISIBLE){
-                        listView.setVisibility(View.VISIBLE);
+//                    if(listView.getVisibility() == View.INVISIBLE){
+//                        listView.setVisibility(View.VISIBLE);
+//                    } else {
+//                        listView.setVisibility(View.INVISIBLE);
+//                    }
+//                    startCalendarAnimation();
+
+                    if(noteSearch.getVisibility() == View.INVISIBLE) {
+                        noteSearch.setVisibility(View.VISIBLE);
+                        myToolbar.setLogo(null);
                     } else {
-                        listView.setVisibility(View.INVISIBLE);
+                        noteSearch.setVisibility(View.INVISIBLE);
+                        myToolbar.setLogo(R.drawable.snippetgreen);
+
+                        Intent intent = new Intent(context, AdventureList.class);
+                        Bundle b = new Bundle();
+                        b.putString("note", noteSearch.getText().toString());
+                        intent.putExtras(b);
+                        startActivity(intent);
                     }
-                    startCalendarAnimation();
                     return true;
             }
         }
@@ -255,22 +273,22 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             startActivity(intent);
         }
         // If either of the arrows is clicked, this is here just so code wouldn't be repeated too much
-        if (v == findViewById(R.id.leftArrow) || v == findViewById(R.id.rightArrow)) {
-            // If the right arrow is clicked and the current search is not already at the max
-            // increment currentSearch
-            if (v == findViewById(R.id.rightArrow) && currentSearch != 1) {
-                currentSearch++;
-                // Otherwise, if the left arrow is clicked and the current search isn't already at
-                // the minimum, decrement currentSearch
-            } else if (v == findViewById(R.id.leftArrow) && currentSearch != 0) {
-                currentSearch--;
-            }
-
-            // Show or Hide some components based on the currentSearch variable
-            // 0 is calendar, 1 is note
-            showWayOfSearching(currentSearch);
-
-        }
+//        if (v == findViewById(R.id.leftArrow) || v == findViewById(R.id.rightArrow)) {
+//            // If the right arrow is clicked and the current search is not already at the max
+//            // increment currentSearch
+//            if (v == findViewById(R.id.rightArrow) && currentSearch != 1) {
+//                currentSearch++;
+//                // Otherwise, if the left arrow is clicked and the current search isn't already at
+//                // the minimum, decrement currentSearch
+//            } else if (v == findViewById(R.id.leftArrow) && currentSearch != 0) {
+//                currentSearch--;
+//            }
+//
+//            // Show or Hide some components based on the currentSearch variable
+//            // 0 is calendar, 1 is note
+//            showWayOfSearching(currentSearch);
+//
+//        }
 
     }
 
