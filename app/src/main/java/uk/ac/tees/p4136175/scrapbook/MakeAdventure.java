@@ -93,6 +93,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     public static TextView locationText;
     String currentLocation = "none";
 
+    boolean hasDateAssigned = false;
+    boolean hasLocationAssigned = false;
+
     private int _Adventure_Id=0;
 
     // Image Stuff
@@ -105,6 +108,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
 
     BottomNavigationView bottomNav;
+
+    AdventureEntry adv;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -133,6 +138,25 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         attributionText = (WebView) findViewById(R.id.wvAttribution);
         attributionText.setVisibility(View.INVISIBLE);
 
+        _Adventure_Id =0;
+        Intent intent = getIntent();
+        _Adventure_Id =intent.getIntExtra("adventure_Id", 0);
+        AdventureRepo repo = new AdventureRepo(this);
+
+        adv = repo.getAdventureById(_Adventure_Id);
+
+        if(adv.note_text != null){
+            makeEntry.setText(String.valueOf(adv.note_text));
+        }
+
+        // If the adventure has an image attached to it, set the imageview bitmap to the image
+        if(adv.image != null){
+            mImageView.setImageBitmap(getImage(adv.image));
+        }
+
+        // If the adventure has a location attached to it
+
+
         calendarView = (CalendarView) findViewById(R.id.calendarViewDate);
         calendarView.setVisibility(View.INVISIBLE);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -147,23 +171,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         });
 
-
-        _Adventure_Id =0;
-        Intent intent = getIntent();
-        _Adventure_Id =intent.getIntExtra("adventure_Id", 0);
-        AdventureRepo repo = new AdventureRepo(this);
-        AdventureEntry adv;
-        adv = repo.getAdventureById(_Adventure_Id);
-
-        if(adv.note_text != null){
-            makeEntry.setText(String.valueOf(adv.note_text));
-        }
-
-        // If the adventure has an image attached to it, set the imageview bitmap to the image
-        if(adv.image != null){
-            mImageView.setImageBitmap(getImage(adv.image));
-        }
-
+        // If the adventure has a date attached to it
+        if(adv.datetime != null) selectedDate = adv.datetime;
         toolbarDate.setText(selectedDate);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -199,6 +208,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     }
                 });
 
+        if(adv.loc_name != null){
+            currentLocation = adv.loc_name;
+        }
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MakeAdventure.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
@@ -220,8 +233,11 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                             //Loads of methods using .get to get different info about the location
                             String str = addressList.get(0).getLocality()+", ";
                             str += addressList.get(0).getCountryName();
-                            currentLocation = str;
-                            locationText.setText(str);
+                            if(adv.loc_name == null){
+                                currentLocation = str;
+                                locationText.setText(str);
+                            }
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -260,8 +276,11 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
                             String str = addressList.get(0).getLocality()+", ";
                             str += addressList.get(0).getCountryName();
-                            currentLocation = str;
-                            locationText.setText(str);
+                            if(adv.loc_name == null){
+                                currentLocation = str;
+                                locationText.setText(str);
+                            }
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
