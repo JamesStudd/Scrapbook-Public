@@ -166,36 +166,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
         toolbarDate.setText(selectedDate);
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         setSupportActionBar(myToolbar);
-
-        requestPermission();
 
         bottomNav.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -218,6 +191,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                                 photoPickerIntent.setType("image/*");
                                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+
+
                                 break;
                         }
                         return false;
@@ -226,103 +201,91 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermission();
-            return;
-        }
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            //UPDATE LOCATION EVERY 10 MINUTES OR 20 METRES WALKED - saves battery
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 20, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
+            ActivityCompat.requestPermissions(MakeAdventure.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
+        } else {
+            if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                //UPDATE LOCATION EVERY 10 MINUTES OR 20 METRES WALKED - saves battery
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 20, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
 
-                    //Create a LatLng object with the coords gathered above
-                    LatLng latLng = new LatLng(latitude, longitude);
+                        //Create a LatLng object with the coords gathered above
+                        LatLng latLng = new LatLng(latitude, longitude);
 
-                    Geocoder geocoder = new Geocoder(getApplicationContext());
-                    try {
-                        List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-                        //Loads of methods using .get to get different info about the location
-                        String str = addressList.get(0).getLocality()+", ";
-                        str += addressList.get(0).getCountryName();
-                        currentLocation = str;
-                        locationText.setText(str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        Geocoder geocoder = new Geocoder(getApplicationContext());
+                        try {
+                            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                            //Loads of methods using .get to get different info about the location
+                            String str = addressList.get(0).getLocality()+", ";
+                            str += addressList.get(0).getCountryName();
+                            currentLocation = str;
+                            locationText.setText(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            });
-        }
-        else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-
-                    //Create a LatLng object with the coords gathered above
-                    LatLng latLng = new LatLng(latitude, longitude);
-
-                    Geocoder geocoder = new Geocoder(getApplicationContext());
-                    try {
-                        List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-                        //Loads of methods using .get to get different info about the location
-
-                        String str = addressList.get(0).getLocality()+", ";
-                        str += addressList.get(0).getCountryName();
-                        currentLocation = str;
-                        locationText.setText(str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
-                }
 
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    @Override
+                    public void onProviderEnabled(String provider) {
 
-                }
+                    }
 
-                @Override
-                public void onProviderEnabled(String provider) {
+                    @Override
+                    public void onProviderDisabled(String provider) {
 
-                }
+                    }
+                });
+            }
+            else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
 
-                @Override
-                public void onProviderDisabled(String provider) {
+                        //Create a LatLng object with the coords gathered above
+                        LatLng latLng = new LatLng(latitude, longitude);
 
-                }
-            });
-        }
+                        Geocoder geocoder = new Geocoder(getApplicationContext());
+                        try {
+                            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                            //Loads of methods using .get to get different info about the location
 
+                            String str = addressList.get(0).getLocality()+", ";
+                            str += addressList.get(0).getCountryName();
+                            currentLocation = str;
+                            locationText.setText(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-    }
+                    }
 
-    private void requestPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    @Override
+                    public void onProviderEnabled(String provider) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                });
             }
         }
-    }
 
+    }
 
 
     @Override
@@ -350,30 +313,36 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                        && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted", Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 return;
             }
 
             case MY_PERMISSION_FINE_LOCATION: {
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                if(grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED){
                     Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted", Toast.LENGTH_LONG).show();
                     finish();
+                } else {
+                    askForStoragePermission();
                 }
             }
+        }
+    }
+
+    private void askForStoragePermission(){
+        if (ContextCompat.checkSelfPermission(MakeAdventure.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            System.out.println("Doing this");
+            ActivityCompat.requestPermissions(MakeAdventure.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         }
     }
 
@@ -391,6 +360,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         switch(requestCode) {
             // if the request is to select a photo
             case SELECT_PHOTO: {
+
                 // if the result code is successful
                 if (resultCode == RESULT_OK) {
                     final Uri imageUri = imageReturnedIntent.getData();

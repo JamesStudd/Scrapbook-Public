@@ -415,7 +415,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         }
 
 
-
         updateList();
     }
 
