@@ -321,6 +321,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     private void updateList() {
 
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage, adventureDate,adventureLocation);
+        adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -341,45 +342,11 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                 }
             });
 
-//        // Initialise the repo
-//        AdventureRepo repo = new AdventureRepo(this);
-//
-//        // Create an array list of hashmaps from the return of getAdventureEntryList,
-//        // this returns the adventure Id and note text
-//        ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
-//        if (adventureList.size() != 0) {
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                /**
-//                 * If an item is the listview is clicked
-//                 * @param parent Parent component
-//                 * @param view Item clicked
-//                 * @param position Index of the item
-//                 * @param id Id of the item
-//                 */
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                    // Get the adventureId from the adventureId component in view_adventure_entry
-//                    adventure_id = (TextView) view.findViewById(R.id.adventure_Id);
-//                    String adventureId = adventure_id.getText().toString();
-//                    Intent objIndent = new Intent(getApplicationContext(), MakeAdventure.class);
-//                    objIndent.putExtra("adventure_Id", Integer.parseInt(adventureId));
-//                    startActivity(objIndent);
-//                }
-//            });
-//            ListAdapter adapter = new SimpleAdapter(HomeScreen.this, adventureList, R.layout.activity_view_adventure_entry, new String[]{"id", "note_text", "datetime"}, new int[]{R.id.adventure_Id, R.id.adventure_note, R.id.adventure_datetime});
-//            listView.setAdapter(adapter);
-//        } else {
-//            Toast.makeText(this, "No adventures!", Toast.LENGTH_SHORT).show();
-//        }
-
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("Doing this");
         setArrays();
     }
 
@@ -401,8 +368,15 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             count++;
         }
 
+        System.out.println("About to get the images");
         imageAdapter.getImages();
         List<Bitmap> images = imageAdapter.getImageList();
+
+        System.out.println("SIZES\n" +
+                "-------------------------\n" +
+                "adventureImage: " + adventureImage.length+"\n"+
+                "images: " + images.size());
+
         for (int i = 0; i < adventureImage.length; i++){
             adventureImage[i] = images.get(i);
         }
