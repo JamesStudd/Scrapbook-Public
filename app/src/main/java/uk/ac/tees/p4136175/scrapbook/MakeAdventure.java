@@ -138,6 +138,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         selectedDate = dateFormat.format(date);
 
         attributionText = (WebView) findViewById(R.id.wvAttribution);
+        attributionText.setVisibility(View.INVISIBLE);
 
         calendarView = (CalendarView) findViewById(R.id.calendarViewDate);
         calendarView.setVisibility(View.INVISIBLE);
@@ -159,8 +160,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         });
 
-
-        requestPermission();
 
         _Adventure_Id =0;
         Intent intent = getIntent();
@@ -219,6 +218,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
         setSupportActionBar(myToolbar);
 
+        requestPermission();
+
         bottomNav.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -273,7 +274,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             return;
         }
         if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, new LocationListener() {
+            //UPDATE LOCATION EVERY 10 MINUTES OR 20 METRES WALKED - saves battery
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 20, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     double latitude = location.getLatitude();
