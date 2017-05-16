@@ -94,9 +94,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     public static TextView locationText;
     String currentLocation = "none";
 
-    boolean hasDateAssigned = false;
-    boolean hasLocationAssigned = false;
-
     private int _Adventure_Id=0;
 
     // Image Stuff
@@ -406,8 +403,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
                     if (place.getAttributions() == null) {
                         attributionText.loadData("no attribution", "text/html; charset=utf-8", "UFT-8");
+                        attributionText.setVisibility(View.INVISIBLE);
                     }else {
                         attributionText.loadData(place.getAttributions().toString(), "text/html; charset=utf-8", "UFT-8");
+                        attributionText.setVisibility(View.INVISIBLE);
                     }
                 }
             }
