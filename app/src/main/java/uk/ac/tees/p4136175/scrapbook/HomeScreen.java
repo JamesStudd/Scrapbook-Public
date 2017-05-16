@@ -183,7 +183,11 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_Atlas:
-                        Toast.makeText(getApplicationContext(), "Opening Atlas now", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(context, AtlastActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_calendar:
+
                 }
                 return true;
             }
@@ -193,9 +197,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         mToggle.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
 
     }
 
