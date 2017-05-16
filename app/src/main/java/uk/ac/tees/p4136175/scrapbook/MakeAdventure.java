@@ -79,33 +79,27 @@ import org.w3c.dom.Text;
  */
 public class MakeAdventure extends AppCompatActivity implements View.OnClickListener{
 
-    EditText makeEntry;
-    TextView toolbarDate, locationStatic, toolbarSave;
-    String formattedDate;
-    CalendarView calendarView;
-    String selectedDate;
-    List<View> listOfComponents = new ArrayList<>();
-    DateFormat dateFormat;
-    Date date;
+    // Instance Variables
+    EditText makeEntry; // The note the user can enter
+    TextView toolbarDate, toolbarSave; // The current date / chosen date and the save button
+    CalendarView calendarView; // The calendar to change the date of the adventure
+    String selectedDate; // The date (if the user chooses a different date)
+    List<View> listOfComponents = new ArrayList<>(); // All of the components (to make invis)
+    DateFormat dateFormat; // The date formatted
+    Date date; // The current date
     WebView attributionText;
-    final Context context = this;
+
     LocationManager locationManager;
     public static TextView locationText;
-    Button btnDelete;
     String currentLocation = "none";
 
     private int _Adventure_Id=0;
 
     // Image Stuff
-    private Uri mImageCaptureUri;
     private ImageView mImageView;
 
     private final static int MY_PERMISSION_FINE_LOCATION = 104;
     private final static int PLACE_PICKER_REQUEST = 107;
-
-
-    private static final int PICK_FROM_CAMERA = 1;
-    private static final int PICK_FROM_FILE = 2;
 
     private final int SELECT_PHOTO = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
@@ -117,7 +111,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_adventure);
-
 
         makeEntry = (EditText) findViewById(R.id.adventureEntry);
         listOfComponents.add(makeEntry);
@@ -149,12 +142,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
                 selectedDate = dayOfMonth + " " + monthNames[month] + " " + year;
                 changeComponents(View.VISIBLE);
-
-//                if(!Objects.equals(selectedDate, dateFormat.format(date))){
-//                    dateStatic.setText("Chosen Date:");
-//                } else {
-//                    dateStatic.setText("Current Date:");
-//                }
                 toolbarDate.setText(selectedDate);
             }
         });
@@ -173,12 +160,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             makeEntry.setText(String.valueOf(adv.note_text));
         }
 
+        // If the adventure has an image attached to it, set the imageview bitmap to the image
         if(adv.image != null){
-            System.out.println(adv.image + " is the image");
-            System.out.println(getImage(adv.image));
             mImageView.setImageBitmap(getImage(adv.image));
-        } else {
-            System.out.println("adv image was null.");
         }
 
         toolbarDate.setText(selectedDate);
@@ -208,38 +192,28 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         }
 
-
-        System.out.println("Made the delete button");
-
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-
-        System.out.println("Bottom Nav: " + bottomNav +
-                "\n" + "Other stuff: " + bottomNav.getMenu());
-
         setSupportActionBar(myToolbar);
 
         bottomNav.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        System.out.println("Got to the method");
                         switch (item.getItemId()) {
+                            // If the user selects the map button, they will be taken to the location picker
                             case R.id.make_map:
                                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                                 try {
                                     Intent intent = builder.build(MakeAdventure.this);
                                     startActivityForResult(intent, PLACE_PICKER_REQUEST);
-                                } catch (GooglePlayServicesRepairableException e) {
-                                    e.printStackTrace();
-                                } catch (GooglePlayServicesNotAvailableException e) {
+                                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                                     e.printStackTrace();
                                 }
-
                                 break;
 
+                            // If the user selects the camera button, they will be taken to the gallery
                             case R.id.make_camera:
-                                System.out.println("Clicked the make camera button");
                                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                                 photoPickerIntent.setType("image/*");
                                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -249,27 +223,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     }
                 });
 
-//        Button pickImage = (Button) findViewById(R.id.imageButton);
-//        pickImage.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-//                photoPickerIntent.setType("image/*");
-//                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-//            }
-//        });
-//        listOfComponents.add(pickImage);
-
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            requestPermission();
             return;
         }
         if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -371,15 +327,15 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         System.out.println("Got to onOptionsItemSelected method");
             switch (item.getItemId()) {
+                // If the user clicks the calendar, display the calendar to select a new date
                 case R.id.make_calendar_button:
-                    System.out.println("Doing this");
                     calendarView.setVisibility(View.VISIBLE);
                     changeComponents(View.INVISIBLE);
                     return true;
 
+                // If the user wants to delete the current entry
                 case R.id.make_delete_opt:
                     // Use the repo delete method
-                    System.out.println("deleting shit");
                     AdventureRepo repo = new AdventureRepo(this);
                     repo.delete(_Adventure_Id);
                     Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
@@ -388,8 +344,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             }
         return super.onOptionsItemSelected(item);
         }
-
-
 
 
     @Override
@@ -476,19 +430,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         return super.onCreateOptionsMenu(menu);
     }
 
-    public String getRealPathFromURI(Uri contentUri) {
-        String [] proj      = {MediaStore.Images.Media.DATA};
-        Cursor cursor       = getContentResolver().query(contentUri, proj, null, null, null);
-
-        if (cursor == null) return null;
-
-        int column_index    = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        cursor.moveToFirst();
-
-        return cursor.getString(column_index);
-    }
-
     /**
      * When a component is clicked
      * @param v THe component
@@ -511,7 +452,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             Bitmap image = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
             adv.image = getBytes(image);
             adv.datetime = selectedDate;
-            System.out.println(currentLocation);
             adv.loc_name = currentLocation;
 
             // If the adventure is new, insert it into the DB
@@ -552,14 +492,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
-    /**
-     * Set the location text to the formatted address using the global variable
-     */
-    public void setFormattedAddress(){
-        if(LocationHelper.getlInstance().currentLocation != null){
-            locationText.setText(LocationHelper.getlInstance().currentLocation);
-        }
-    }
 
     /**
      * Take each component on the make adventure page and set them visible, or invisible
