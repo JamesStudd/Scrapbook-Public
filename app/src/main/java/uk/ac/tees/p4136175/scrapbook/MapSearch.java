@@ -81,8 +81,6 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
 
-                    System.out.println("Location" + latitude + " " + longitude);
-
                     //Create a LatLng object with the coords gathered above
                     LatLng latLng = new LatLng(latitude, longitude);
 
@@ -199,7 +197,6 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
                 marker.remove();
             }
             marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Searched location"));
-            System.out.println(locationText);
 
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.2f));

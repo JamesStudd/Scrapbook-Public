@@ -176,7 +176,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                         myToolbar.setLogo(R.drawable.snippetgreen);
 
                         if(!((noteSearch.getText().toString()).matches(""))) {
-                            System.out.println("Search-"+noteSearch.getText().toString()+"-");
                             setArrays(noteSearch.getText().toString());
                         } else {
                             setArrays("");
@@ -238,7 +237,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("doing this");
         setArrays("");
     }
 

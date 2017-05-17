@@ -1,13 +1,8 @@
 package uk.ac.tees.p4136175.scrapbook;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -18,61 +13,40 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
-import android.view.Menu;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class is the longest, it allows for new adventures to be created but also
@@ -89,6 +63,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     DateFormat dateFormat; // The date formatted
     Date date; // The current date
     WebView attributionText;
+    boolean imageChanged;
 
     LocationManager locationManager;
     public static TextView locationText;
@@ -114,6 +89,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_adventure);
+
+        imageChanged = false;
 
         makeEntry = (EditText) findViewById(R.id.adventureEntry);
         listOfComponents.add(makeEntry);
@@ -308,7 +285,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        System.out.println("Got to onOptionsItemSelected method");
             switch (item.getItemId()) {
                 // If the user clicks the calendar, display the calendar to select a new date
                 case R.id.make_calendar_button:
@@ -360,7 +336,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         if (ContextCompat.checkSelfPermission(MakeAdventure.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("Doing this");
             ActivityCompat.requestPermissions(MakeAdventure.this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         }
@@ -392,6 +367,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     }
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     mImageView.setImageBitmap(selectedImage);
+                    imageChanged = true;
 
                 }
                 break;
@@ -435,6 +411,8 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         // if the component is the save button
         if (v == findViewById(R.id.toolbar_save)) {
 
+
+
             // Create a local repo and a blank adventure
             AdventureRepo repo = new AdventureRepo(this);
             AdventureEntry adv = new AdventureEntry();
@@ -450,19 +428,32 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
 
             // If the adventure is new, insert it into the DB
             if (_Adventure_Id == 0) {
-                _Adventure_Id = repo.insert(adv);
-                Toast.makeText(this, "New Adventure Created", Toast.LENGTH_SHORT).show();
+
+                if(!imageChanged){
+                    Toast.makeText(this, "Please Choose An Image", Toast.LENGTH_SHORT).show();
+                } else {
+                    _Adventure_Id = repo.insert(adv);
+                    Toast.makeText(this, "New Adventure Created", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK,intent);
+                    finish();
+                }
+
+
                 // If the adventure is exisiting already, just update it
             } else {
                 repo.update(adv);
                 Toast.makeText(this, "Adventure Entry Updated", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent();
+                setResult(RESULT_OK,intent);
+                finish();
             }
             // If the component is the delete button
 
         }
-        Intent intent = new Intent();
-        setResult(RESULT_OK,intent);
-        finish();
+
     }
 
 

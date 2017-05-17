@@ -43,7 +43,6 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
         txtDate.setText(date[position]);
         txtTitle.setText(itemname[position]);
         imageView.setImageBitmap(img[position]);
-        System.out.println("Image : " + img[position]);
         extratxt.setText("Location: " + location[position]);
         return rowView;
 
