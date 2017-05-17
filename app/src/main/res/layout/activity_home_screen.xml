@@ -32,13 +32,14 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <CalendarView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/calendarView3"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/my_toolbar"
-        android:layout_centerHorizontal="true" />
+        <CalendarView
+            android:id="@+id/calendarView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/my_toolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:selectedWeekBackgroundColor="#04B404" />
 
     <TextView
         android:text="&lt;"
