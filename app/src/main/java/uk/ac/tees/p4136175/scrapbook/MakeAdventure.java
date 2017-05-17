@@ -397,8 +397,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
             // If the adventure is new, insert it into the DB
             if (_Adventure_Id == 0) {
 
-                if(!imageChanged){
+                if(!imageChanged) {
                     Toast.makeText(this, "Please Choose An Image", Toast.LENGTH_SHORT).show();
+                } else if (makeEntry.getText().toString().equals("")){
+                    Toast.makeText(this, "Please Add A Note", Toast.LENGTH_SHORT).show();
                 } else {
                     _Adventure_Id = repo.insert(adv);
                     Toast.makeText(this, "New Adventure Created", Toast.LENGTH_SHORT).show();
