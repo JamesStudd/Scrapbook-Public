@@ -322,7 +322,9 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
                     AdventureRepo repo = new AdventureRepo(this);
                     repo.delete(_Adventure_Id);
                     Toast.makeText(this, "Adventure Deleted", Toast.LENGTH_SHORT);
-                    return true;
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK,intent);
+                    finish();
 
             }
         return super.onOptionsItemSelected(item);
