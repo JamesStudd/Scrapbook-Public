@@ -17,4 +17,8 @@
         android:title="Images"
         android:icon="@drawable/ic_burst_mode_black_24dp"/>
 
+    <item android:id="@+id/nav_help"
+        android:title="Help"
+        android:icon="@drawable/ic_help_black_24dp"/>
+
 </menu>
