@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -121,7 +122,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
         listView = (ListView) findViewById(R.id.listView);
 
-        setArrays();
+        setArrays("");
 
         // Initialise the components, each button etc.
         btnAdd = (ImageButton) findViewById(R.id.addButton);
@@ -232,13 +233,20 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                         myToolbar.setLogo(R.drawable.snippetgreen);
 
                         if(!((noteSearch.getText().toString()).matches(""))) {
-                            Intent intent = new Intent(context, AdventureList.class);
-                            Bundle b = new Bundle();
-                            b.putString("note", noteSearch.getText().toString());
-                            intent.putExtras(b);
-                            noteSearch.setText("");
-                            startActivity(intent);
+                            System.out.println("Search-"+noteSearch.getText().toString()+"-");
+                            setArrays(noteSearch.getText().toString());
+//                            Intent intent = new Intent(context, AdventureList.class);
+//                            Bundle b = new Bundle();
+//                            b.putString("note", noteSearch.getText().toString());
+//                            intent.putExtras(b);
+//                            noteSearch.setText("");
+//                            startActivity(intent);
+                        } else {
+                            setArrays("");
                         }
+
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 
                     }
                     return true;
@@ -331,13 +339,30 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        setArrays();
+        setArrays("");
     }
 
-    private void setArrays(){
+    private void setArrays(String searchCriteria){
             AdventureRepo repo = new AdventureRepo(this);
             ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
+            if(searchCriteria != ""){
+                ArrayList<HashMap<String, String>> adventureListWithSearchCritera = new ArrayList<>();
+                for (HashMap<String, String> h : adventureList){
+                    String s = h.get("note_text");
+                    if (s.toLowerCase().indexOf(searchCriteria.toLowerCase()) != -1){
+                        adventureListWithSearchCritera.add(h);
+                    }
+                }
 
+                if(adventureListWithSearchCritera.size() == 0){
+                    Toast.makeText(this,"No adventures containing: " + searchCriteria,Toast.LENGTH_SHORT).show();
+                } else {
+                    adventureList.clear();
+                    adventureList = adventureListWithSearchCritera;
+                }
+
+
+            }
 
             adventureNote = new String[adventureList.size()];
             adventureImage = new Bitmap[adventureList.size()];
