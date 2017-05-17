@@ -166,6 +166,15 @@ public class AdventureList extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mToggle.onOptionsItemSelected(item)) {
+            return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onClick(View v) {
         //
     }

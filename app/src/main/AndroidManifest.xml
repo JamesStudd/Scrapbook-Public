@@ -37,8 +37,6 @@ package="uk.ac.tees.p4136175.scrapbook">
 
     </activity>
 
-    <service android:name=".GPS_Service" />
-
     <activity android:name=".CalendarActivity" />
 </application>
 
