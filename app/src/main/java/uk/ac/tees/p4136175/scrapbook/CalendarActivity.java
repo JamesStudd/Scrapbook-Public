@@ -119,16 +119,23 @@ public class CalendarActivity extends AppCompatActivity {
                     case R.id.nav_Atlas:
                         Intent intent = new Intent(context, AtlastActivity.class);
                         startActivity(intent);
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_calendar:
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_images:
                         Intent intent3 = new Intent(context, AdventureList.class);
                         startActivity(intent3);
                         break;
+                    case R.id.nav_help:
+                        Intent intent4 = new Intent(context, HelpPage.class);
+                        startActivity(intent4);
+                        break;
+                    case R.id.nav_info:
+                        Intent intent5 = new Intent(context, AboutPage.class);
+                        startActivity(intent5);
+                        break;
                 }
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
                 return true;
             }
         });

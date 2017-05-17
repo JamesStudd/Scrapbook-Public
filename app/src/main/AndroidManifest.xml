@@ -50,10 +50,10 @@
             android:label="@string/title_activity_atlast" />
         <activity
             android:name=".AtlasBackup"
-            android:label="@string/title_activity_atlas_backup"></activity>
+            android:label="@string/title_activity_atlas_backup" />
         <activity android:name=".CalendarActivity" />
-        <activity android:name=".HelpPage"></activity>
-
+        <activity android:name=".HelpPage" />
+        <activity android:name=".AboutPage"></activity>
     </application>
 
 </manifest>

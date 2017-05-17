@@ -11,9 +11,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-public class HelpPage extends AppCompatActivity {
+public class AboutPage extends AppCompatActivity {
 
     Toolbar myToolbar;
 
@@ -28,14 +27,14 @@ public class HelpPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_help_page);
+        setContentView(R.layout.activity_about_page);
 
-        myToolbar = (Toolbar) findViewById(R.id.my_toolbar4);
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar5);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        nv = (NavigationView) findViewById(R.id.nv4);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_help_page);
+        nv = (NavigationView) findViewById(R.id.nv5);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_about_page);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
 
         mDrawerLayout.addDrawerListener(mToggle);
@@ -61,8 +60,8 @@ public class HelpPage extends AppCompatActivity {
                         Intent intent4 = new Intent(context, AdventureList.class);
                         startActivity(intent4);
                         break;
-                    case R.id.nav_info:
-                        Intent intent5 = new Intent(context, AboutPage.class);
+                    case R.id.nav_help:
+                        Intent intent5 = new Intent(context, HelpPage.class);
                         startActivity(intent5);
                         break;
                 }
