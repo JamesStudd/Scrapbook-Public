@@ -136,6 +136,10 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                         Intent intent3 = new Intent(context, AdventureList.class);
                         startActivity(intent3);
                         break;
+                    case R.id.nav_help:
+                        Intent intent4 = new Intent(context, HelpPage.class);
+                        startActivity(intent4);
+                        break;
                 }
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
                 return true;
@@ -176,7 +180,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                         myToolbar.setLogo(R.drawable.snippetgreen);
 
                         if(!((noteSearch.getText().toString()).matches(""))) {
-                            System.out.println("Search-"+noteSearch.getText().toString()+"-");
                             setArrays(noteSearch.getText().toString());
                         } else {
                             setArrays("");
@@ -205,8 +208,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         if (v == findViewById(R.id.addButton)) {
             Intent intent = new Intent(context, MakeAdventure.class);
             startActivityForResult(intent,0);
-            // If the find button is selected, the AdventureList activity is called whilst passing
-            // in the current noteSearch string (search)
         }
 
     }
@@ -231,7 +232,7 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                     // Get the adventureId from the adventureId component in view_adventure_entry
                     Intent objIndent = new Intent(getApplicationContext(), MakeAdventure.class);
                     objIndent.putExtra("adventure_Id", adventureIdArray[position]);
-                    startActivity(objIndent);
+                    startActivityForResult(objIndent,0);
                 }
             });
 

@@ -124,7 +124,10 @@ public class CalendarActivity extends AppCompatActivity {
                     case R.id.nav_calendar:
                         mDrawerLayout.closeDrawer(Gravity.LEFT);
                         break;
-
+                    case R.id.nav_images:
+                        Intent intent3 = new Intent(context, AdventureList.class);
+                        startActivity(intent3);
+                        break;
                 }
                 return true;
             }

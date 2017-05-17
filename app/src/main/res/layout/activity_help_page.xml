@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_help_page"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="uk.ac.tees.p4136175.scrapbook.HelpPage">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar4"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#04B404"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:text="What is Snippet?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2"
+            android:gravity="center"
+            android:layout_marginTop="80dp"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:text="Snippet is an adventure diary app designed to store your latest and greatest adventures, as well as keeping track of where you've been on the atlas."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_marginTop="100dp"
+            android:gravity="center" />
+
+        <TextView
+            android:text="To get started, click the + button on the home page. Then enter a note to describe your adventure, add an image and a location, then click the tick in the top left."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="220dp"
+            android:id="@+id/textView5" />
+
+        <TextView
+            android:text="How do I get started?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:gravity="center"
+            android:id="@+id/textView4"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:text="How do I view the adventures?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/textView6"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="340dp" />
+
+        <TextView
+            android:text="You can either stay on the home page and see a list of all adventures, or click the search button at the top right and type in some search criteria to narrow the selection down. You can also view all of the adventure images by clicking the navigation bar menu at the top left and clicking 'images'. You could also click 'Atlas' to see where you've been!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/textView7"
+            android:layout_below="@+id/textView6"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/nv4"
+        app:menu="@menu/navigation_menu"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/navigation_header">
+    </android.support.design.widget.NavigationView>
+
+
+
+
+
+</android.support.v4.widget.DrawerLayout>
