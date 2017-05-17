@@ -32,13 +32,15 @@ package="uk.ac.tees.p4136175.scrapbook">
     <activity android:name=".HomeScreen" />
     <activity android:name=".ViewEntryHomePage" />
     <activity android:name=".ViewEntry" />
-    <activity android:name="uk.ac.tees.p4136175.scrapbook.AtlastActivity" android:label="@string/title_activity_atlast">
+    <activity android:name=".AtlastActivity" android:label="@string/title_activity_atlast" />
+    <activity android:name="uk.ac.tees.p4136175.scrapbook.AtlasBackup" android:label="@string/title_activity_atlas_backup">
 
     </activity>
 
     <service android:name=".GPS_Service" />
 
-
+    <activity android:name=".CalendarActivity" />
 </application>
 
 </manifest>
+

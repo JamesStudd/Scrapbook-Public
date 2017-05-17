@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/nav_adventures"
+        android:title="Adventures"
+        android:icon="@drawable/ic_home_black_24dp"/>
+
     <item android:id="@+id/nav_calendar"
         android:title="Calendar"
         android:icon="@drawable/ic_date_range_black_24dp"/>
@@ -8,5 +12,9 @@
     <item android:id="@+id/nav_Atlas"
         android:title="Atlas"
         android:icon="@drawable/ic_place_black_24dp"/>
+
+    <item android:id="@+id/nav_images"
+        android:title="Images"
+        android:icon="@drawable/ic_burst_mode_black_24dp"/>
 
 </menu>

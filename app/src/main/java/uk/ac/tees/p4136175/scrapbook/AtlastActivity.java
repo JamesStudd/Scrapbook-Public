@@ -1,9 +1,24 @@
 package uk.ac.tees.p4136175.scrapbook;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +34,16 @@ import java.util.List;
 
 public class AtlastActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    Toolbar myToolbar;
+
+    NavigationView nv;
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+
+    // This class
+    final Context context = this;
+
     private GoogleMap mMap;
 
     @Override
@@ -29,6 +54,53 @@ public class AtlastActivity extends FragmentActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+//        myToolbar = (Toolbar) findViewById(R.id.my_toolbar3);
+////        setSupportActionBar(myToolbar);
+////        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        nv = (NavigationView) findViewById(R.id.nv2);
+//        mDrawerLayout = (DrawerLayout) findViewById(R.id.calendar_activity);
+//        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+//
+//        mDrawerLayout.addDrawerListener(mToggle);
+//        mToggle.syncState();
+//
+//        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.nav_adventures:
+//                        finish();
+//                        break;
+//                    case R.id.nav_Atlas:
+//                        mDrawerLayout.closeDrawer(Gravity.LEFT);
+//                        break;
+//                    case R.id.nav_calendar:
+//                        Intent intent2 = new Intent(context, CalendarActivity.class);
+//                        startActivity(intent2);
+//                        mDrawerLayout.closeDrawer(Gravity.LEFT);
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.empty_toolbar, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -65,10 +137,5 @@ public class AtlastActivity extends FragmentActivity implements OnMapReadyCallba
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title(address.getLocality()));
         }
-
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }

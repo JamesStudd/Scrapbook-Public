@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,11 +48,7 @@ import java.util.List;
 public class HomeScreen extends AppCompatActivity implements android.view.View.OnClickListener {
 
     // btnAdd = Make Adventure
-    // btnList = List adventures
-    // btnSearch = Bring up the calendar/noteSearch
-    // btnFind = Search when a note is typed in
-    Button btnList, btnSearch;
-    ImageButton btnAdd, btnFind;
+    ImageButton btnAdd;
 
     // List view and ID for the adventure
     ListView listView;
@@ -78,6 +75,9 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
     // The calendar view, used for searching
     CalendarView calendarView;
+
+    //Toolbar
+    Toolbar myToolbar;
 
     // Is the calendar currently shown?
     boolean calendarShown = false;
@@ -132,10 +132,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_home_screen);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
 
-        btnFind = (ImageButton) findViewById(R.id.findButton);
-        btnFind.setVisibility(View.INVISIBLE);
-        btnFind.setOnClickListener(this);
-
         calendarView = (CalendarView) findViewById(R.id.calendarView3);
         calendarView.setVisibility(View.INVISIBLE);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -175,18 +171,27 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         noteSearch = (EditText) findViewById(R.id.noteSearch);
         noteSearch.setVisibility(View.INVISIBLE);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        myToolbar.setLogo(R.drawable.snippetgreen);
 
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.nav_adventures:
+                        mDrawerLayout.closeDrawer(Gravity.LEFT);
+                        break;
                     case R.id.nav_Atlas:
-                        Intent intent = new Intent(context, AtlastActivity.class);
+                        Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
+                        mDrawerLayout.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_calendar:
+                        Intent intent2 = new Intent(context, CalendarActivity.class);
+                        startActivity(intent2);
+                        mDrawerLayout.closeDrawer(Gravity.LEFT);
+                        break;
 
                 }
                 return true;
@@ -219,12 +224,23 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                     Toast.makeText(getApplicationContext(), "Settings selected", Toast.LENGTH_LONG).show();
                     return true;
                 case R.id.search_id:
-                    if(listView.getVisibility() == View.INVISIBLE){
-                        listView.setVisibility(View.VISIBLE);
+                    if(noteSearch.getVisibility() == View.INVISIBLE) {
+                        noteSearch.setVisibility(View.VISIBLE);
+                        myToolbar.setLogo(null);
                     } else {
-                        listView.setVisibility(View.INVISIBLE);
+                        noteSearch.setVisibility(View.INVISIBLE);
+                        myToolbar.setLogo(R.drawable.snippetgreen);
+
+                        if(!((noteSearch.getText().toString()).matches(""))) {
+                            Intent intent = new Intent(context, AdventureList.class);
+                            Bundle b = new Bundle();
+                            b.putString("note", noteSearch.getText().toString());
+                            intent.putExtras(b);
+                            noteSearch.setText("");
+                            startActivity(intent);
+                        }
+
                     }
-                    startCalendarAnimation();
                     return true;
             }
         }
@@ -255,68 +271,36 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             startActivity(intent);
         }
         // If either of the arrows is clicked, this is here just so code wouldn't be repeated too much
-        if (v == findViewById(R.id.leftArrow) || v == findViewById(R.id.rightArrow)) {
-            // If the right arrow is clicked and the current search is not already at the max
-            // increment currentSearch
-            if (v == findViewById(R.id.rightArrow) && currentSearch != 1) {
-                currentSearch++;
-                // Otherwise, if the left arrow is clicked and the current search isn't already at
-                // the minimum, decrement currentSearch
-            } else if (v == findViewById(R.id.leftArrow) && currentSearch != 0) {
-                currentSearch--;
-            }
-
-            // Show or Hide some components based on the currentSearch variable
-            // 0 is calendar, 1 is note
-            showWayOfSearching(currentSearch);
-
-        }
-
-    }
-
-    /**
-     * Animates the 'Make Adventure' button as well as removing
-     * the left arrow, right arrow and the calendar
-     */
-    public void startCalendarAnimation() {
-        if (calendarShown) {
-
-            calendarView.setVisibility(View.INVISIBLE);
-            leftArrow.setVisibility(View.INVISIBLE);
-            rightArrow.setVisibility(View.INVISIBLE);
-        } else {
-            calendarView.setVisibility(View.VISIBLE);
-            leftArrow.setVisibility(View.VISIBLE);
-            rightArrow.setVisibility(View.VISIBLE);
-        }
-        // Set calendarShown = not calendarShown (true to false, false to true)
-        calendarShown = !calendarShown;
-        // Make the find button and note search invisible
-        btnFind.setVisibility(View.INVISIBLE);
-        noteSearch.setVisibility(View.INVISIBLE);
+//        if (v == findViewById(R.id.leftArrow) || v == findViewById(R.id.rightArrow)) {
+//            // If the right arrow is clicked and the current search is not already at the max
+//            // increment currentSearch
+//            if (v == findViewById(R.id.rightArrow) && currentSearch != 1) {
+//                currentSearch++;
+//                // Otherwise, if the left arrow is clicked and the current search isn't already at
+//                // the minimum, decrement currentSearch
+//            } else if (v == findViewById(R.id.leftArrow) && currentSearch != 0) {
+//                currentSearch--;
+//            }
+//
+//            // Show or Hide some components based on the currentSearch variable
+//            // 0 is calendar, 1 is note
+//            showWayOfSearching(currentSearch);
+//
+//        }
 
     }
 
-
-    /**
-     * Sets the calender and noteSearch components invisible or visible based on the parameter
-     *
-     * @param state will either be '0' or '1', 0 = calendar, 1 = note
-     */
-    public void showWayOfSearching(int state) {
-        switch (state) {
-            case 0: // Calendar
-                calendarView.setVisibility(View.VISIBLE);
-                noteSearch.setVisibility(View.INVISIBLE);
-                btnFind.setVisibility(View.INVISIBLE);
-                break;
-            case 1: // Note
-                calendarView.setVisibility(View.INVISIBLE);
-                noteSearch.setVisibility(View.VISIBLE);
-                btnFind.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
+//    /**
+//     * Animates the 'Make Adventure' button as well as removing
+//     * the left arrow, right arrow and the calendar
+//     */
+//
+//
+//    /**
+//     * Sets the calender and noteSearch components invisible or visible based on the parameter
+//     *
+//     * @param state will either be '0' or '1', 0 = calendar, 1 = note
+//     */
 
     private void updateList() {
 
@@ -384,39 +368,39 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
     }
 
     private void setArrays(){
-        AdventureRepo repo = new AdventureRepo(this);
-        ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
+            AdventureRepo repo = new AdventureRepo(this);
+            ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
 
 
-        adventureNote = new String[adventureList.size()];
-        adventureImage = new Bitmap[adventureList.size()];
-        adventureDate = new String[adventureList.size()];
-        adventureLocation = new String[adventureList.size()];
-        // Create an array the same size as the current adventure list size
-        adventureIdArray = new int[adventureList.size()];
-        int count = 0;
-        // For each hashmap, get the ID of the entry and save it into the array just created
-        for(HashMap<String, String> h : adventureList){
-            adventureIdArray[count] = Integer.parseInt(String.valueOf(h.get("id")));
-            count++;
-        }
+            adventureNote = new String[adventureList.size()];
+            adventureImage = new Bitmap[adventureList.size()];
+            adventureDate = new String[adventureList.size()];
+            adventureLocation = new String[adventureList.size()];
+            // Create an array the same size as the current adventure list size
+            adventureIdArray = new int[adventureList.size()];
+            int count = 0;
+            // For each hashmap, get the ID of the entry and save it into the array just created
+            for(HashMap<String, String> h : adventureList){
+                adventureIdArray[count] = Integer.parseInt(String.valueOf(h.get("id")));
+                count++;
+            }
 
-        imageAdapter.getImages();
-        List<Bitmap> images = imageAdapter.getImageList();
-        for (int i = 0; i < adventureImage.length; i++){
-            adventureImage[i] = images.get(i);
-        }
-
-
-        for (int i = 0; i <adventureNote.length ; i ++){
-            HashMap<String, String> t = adventureList.get(i);
-            adventureNote[i] = t.get("note_text");
-            adventureDate[i] = t.get("datetime");
-            adventureLocation[i] = t.get("location");
-        }
+            imageAdapter.getImages();
+            List<Bitmap> images = imageAdapter.getImageList();
+            for (int i = 0; i < adventureImage.length; i++){
+                adventureImage[i] = images.get(i);
+            }
 
 
-        updateList();
+            for (int i = 0; i <adventureNote.length ; i ++){
+                HashMap<String, String> t = adventureList.get(i);
+                adventureNote[i] = t.get("note_text");
+                adventureDate[i] = t.get("datetime");
+                adventureLocation[i] = t.get("location");
+            }
+
+
+            updateList();
     }
 
 
