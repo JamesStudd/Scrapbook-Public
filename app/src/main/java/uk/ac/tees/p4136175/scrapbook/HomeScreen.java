@@ -2,6 +2,7 @@ package uk.ac.tees.p4136175.scrapbook;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -181,20 +182,21 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_adventures:
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_Atlas:
                         Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_calendar:
                         Intent intent2 = new Intent(context, CalendarActivity.class);
                         startActivity(intent2);
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
                         break;
-
+                    case R.id.nav_images:
+                        Intent intent3 = new Intent(context, AdventureList.class);
+                        startActivity(intent3);
+                        break;
                 }
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
                 return true;
             }
         });
