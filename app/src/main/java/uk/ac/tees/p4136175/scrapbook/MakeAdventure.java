@@ -186,97 +186,63 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         if(adv.loc_name != null){
             currentLocation = adv.loc_name;
             locationText.setText(currentLocation);
-        }
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MakeAdventure.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
         } else {
-            if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                //UPDATE LOCATION EVERY 10 MINUTES OR 20 METRES WALKED - saves battery
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 20, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MakeAdventure.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
+            } else {
+                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    Location currentLoc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    System.out.println(currentLoc);
+                    getLocation(currentLoc);
 
-                        //Create a LatLng object with the coords gathered above
-                        LatLng latLng = new LatLng(latitude, longitude);
 
-                        Geocoder geocoder = new Geocoder(getApplicationContext());
-                        try {
-                            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-                            //Loads of methods using .get to get different info about the location
-                            String str = addressList.get(0).getLocality()+", ";
-                            str += addressList.get(0).getCountryName();
-                            if(adv.loc_name == null){
-                                currentLocation = str;
-                                locationText.setText(str);
-                            }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    //UPDATE LOCATION EVERY 10 MINUTES OR 20 METRES WALKED - saves battery
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 600000, 20, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            getLocation(location);
                         }
-                    }
 
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
 
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                });
-            }
-            else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
-
-                        //Create a LatLng object with the coords gathered above
-                        LatLng latLng = new LatLng(latitude, longitude);
-
-                        Geocoder geocoder = new Geocoder(getApplicationContext());
-                        try {
-                            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-                            //Loads of methods using .get to get different info about the location
-
-                            String str = addressList.get(0).getLocality()+", ";
-                            str += addressList.get(0).getCountryName();
-                            if(adv.loc_name == null){
-                                currentLocation = str;
-                                locationText.setText(str);
-                            }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-                    }
 
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                        @Override
+                        public void onProviderEnabled(String provider) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onProviderEnabled(String provider) {
+                        @Override
+                        public void onProviderDisabled(String provider) {
 
-                    }
+                        }
+                    });
+                }
+                else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 600000, 20, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            getLocation(location);
+                        }
 
-                    @Override
-                    public void onProviderDisabled(String provider) {
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
 
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+
+                        }
+                    });
+                }
             }
         }
 
@@ -488,6 +454,24 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         }
         if(state == View.VISIBLE){
             calendarView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void getLocation(Location location) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        Geocoder geocoder = new Geocoder(getApplicationContext());
+        try {
+            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+            //Loads of methods using .get to get different info about the location
+            String str = addressList.get(0).getLocality()+", ";
+            str += addressList.get(0).getCountryName();
+            currentLocation = str;
+            locationText.setText(str);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
