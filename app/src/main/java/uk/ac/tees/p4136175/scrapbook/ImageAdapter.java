@@ -96,7 +96,9 @@ public class ImageAdapter extends BaseAdapter {
         // Gets an arraylist of hashmaps from the return of the repo method "getAdventureEntryGrid"
         // The hashmap will be populated with ID and Images
         ArrayList<HashMap<String, Object>> adventureList =  adventureRepo.getAdventureEntryGrid();
+
         AdventureEntry adv;
+
         images.clear();
 
         // Create an array the same size as the current adventure list size

@@ -19,16 +19,27 @@
         android:background="#04B404"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:id="@+id/noteSearch" />
+
+    </android.support.v7.widget.Toolbar>
 
 
-    <CalendarView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/calendarView3"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/my_toolbar"
-        android:layout_centerHorizontal="true" />
+        <CalendarView
+            android:id="@+id/calendarView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/my_toolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:selectedWeekBackgroundColor="#04B404" />
 
     <TextView
         android:text="&lt;"
@@ -47,14 +58,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="300dp"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:id="@+id/noteSearch"
-        android:layout_marginTop="200dp"/>
+
 
     <ImageButton
         android:id="@+id/addButton"
