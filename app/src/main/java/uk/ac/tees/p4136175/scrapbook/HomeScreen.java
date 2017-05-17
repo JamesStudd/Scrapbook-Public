@@ -140,6 +140,10 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                         Intent intent4 = new Intent(context, HelpPage.class);
                         startActivity(intent4);
                         break;
+                    case R.id.nav_info:
+                        Intent intent5 = new Intent(context, AboutPage.class);
+                        startActivity(intent5);
+                        break;
                 }
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
                 return true;
