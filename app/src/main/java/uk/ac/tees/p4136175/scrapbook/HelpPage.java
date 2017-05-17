@@ -17,10 +17,10 @@ public class HelpPage extends AppCompatActivity {
 
     Toolbar myToolbar;
 
-    NavigationView nv;
+    NavigationView nv; // NavigationMenu
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
+    private DrawerLayout mDrawerLayout; // Functionality to slide the nav bar out
+    private ActionBarDrawerToggle mToggle; // Button to do so
 
     // This class
     final Context context = this;
@@ -45,22 +45,27 @@ public class HelpPage extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    // Home page
                     case R.id.nav_adventures:
                         Intent intent3 = new Intent(context, HomeScreen.class);
                         startActivity(intent3);
                         break;
+                    // Atlas page - shows the user where they've been
                     case R.id.nav_Atlas:
                         Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
                         break;
+                    // Calendar - filters adventures by date
                     case R.id.nav_calendar:
                         Intent intent1 = new Intent(context, CalendarActivity.class);
                         startActivity(intent1);
                         break;
+                    // AdventureList - shows the user each image they've saved
                     case R.id.nav_images:
                         Intent intent4 = new Intent(context, AdventureList.class);
                         startActivity(intent4);
                         break;
+                    // Info page - who made the app
                     case R.id.nav_info:
                         Intent intent5 = new Intent(context, AboutPage.class);
                         startActivity(intent5);

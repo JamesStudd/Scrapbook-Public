@@ -16,13 +16,13 @@ public class AboutPage extends AppCompatActivity {
 
     Toolbar myToolbar;
 
-    NavigationView nv;
+    NavigationView nv; // NavigationView is on each page, it's how to navigate through the app
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
+    private DrawerLayout mDrawerLayout; // To extend the navigation bar
+    private ActionBarDrawerToggle mToggle; // The button to open the bar / close the bar
 
-    // This class
-    final Context context = this;
+
+    final Context context = this; // This class
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +44,27 @@ public class AboutPage extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    // Home page
                     case R.id.nav_adventures:
                         Intent intent3 = new Intent(context, HomeScreen.class);
                         startActivity(intent3);
                         break;
+                    // Atlas page, shows the user where they have visited
                     case R.id.nav_Atlas:
                         Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
                         break;
+                    // Calendar page, filter adventures by date
                     case R.id.nav_calendar:
                         Intent intent1 = new Intent(context, CalendarActivity.class);
                         startActivity(intent1);
                         break;
+                    // Images grid, filter adventures by image
                     case R.id.nav_images:
                         Intent intent4 = new Intent(context, AdventureList.class);
                         startActivity(intent4);
                         break;
+                    // Help page, basic how to use
                     case R.id.nav_help:
                         Intent intent5 = new Intent(context, HelpPage.class);
                         startActivity(intent5);

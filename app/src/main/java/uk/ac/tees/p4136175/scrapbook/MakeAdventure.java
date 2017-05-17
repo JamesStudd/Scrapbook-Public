@@ -63,7 +63,7 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
     DateFormat dateFormat; // The date formatted
     Date date; // The current date
     WebView attributionText;
-    boolean imageChanged;
+    boolean imageChanged; // Has the image been updated
 
     LocationManager locationManager;
     public static TextView locationText;
@@ -113,6 +113,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         attributionText = (WebView) findViewById(R.id.wvAttribution);
         attributionText.setVisibility(View.INVISIBLE);
 
+
+        // This section is to check if the activity is to EDIT or make a NEW activity,
+        // if any of the advenure attributes aren't null, the TextView's will be changed to
+        // show the current values
         _Adventure_Id =0;
         Intent intent = getIntent();
         _Adventure_Id =intent.getIntExtra("adventure_Id", 0);
@@ -128,8 +132,6 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         if(adv.image != null){
             mImageView.setImageBitmap(getImage(adv.image));
         }
-
-        // If the adventure has a location attached to it
 
 
         calendarView = (CalendarView) findViewById(R.id.calendarViewDate);
@@ -457,6 +459,10 @@ public class MakeAdventure extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Sets the locationText and currentLocation variable to the location of the user
+     * @param location
+     */
     public void getLocation(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();

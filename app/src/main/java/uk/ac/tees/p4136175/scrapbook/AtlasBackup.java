@@ -55,6 +55,7 @@ public class AtlasBackup extends FragmentActivity implements OnMapReadyCallback 
             adventureLocation[i] = t.get("location");
         }
 
+        // For each location, put a marker on the map
         for (String s : adventureLocation){
             try {
                 addressList = geocoder.getFromLocationName(s, 1);

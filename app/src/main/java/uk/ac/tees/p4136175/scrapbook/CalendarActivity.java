@@ -32,24 +32,26 @@ public class CalendarActivity extends AppCompatActivity {
 
     Toolbar myToolbar;
 
-    NavigationView nv;
+    NavigationView nv; // Navigation menu
 
     ListView listView2;
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
+    private DrawerLayout mDrawerLayout; // The functionality to slide the menu out
+    private ActionBarDrawerToggle mToggle; // The button to make it do so
 
-    String[] adventureNote;
-    Bitmap[] adventureImage;
-    String[] adventureDate;
-    String[] adventureLocation;
-    int[] adventureIdArray;
-    ImageAdapter imageAdapter;
-    CalendarView calendarView;
-    AdventureRepo repo;
+    // These will be passed to CustomArrayAdapter to display the correct information.
+    // Each array will contain the details about each adventure, but only the ones
+    // where the date is the same as the one selected.
+    String[] adventureNote; // All the notes of the adventures
+    Bitmap[] adventureImage; // All the images of the adventures
+    String[] adventureDate; // All the dates of the adventures
+    String[] adventureLocation; // All the locations of the adventures
+    int[] adventureIdArray; // The IDs of the adventures
+    ImageAdapter imageAdapter; // Custom image adapter
+    CalendarView calendarView; // Calendar view to select a new date
+    AdventureRepo repo; // Local repo
     Date date;
     String chosenDate;
-
 
 
     // This class
@@ -64,6 +66,7 @@ public class CalendarActivity extends AppCompatActivity {
         repo = new AdventureRepo(this);
 
         imageAdapter = new ImageAdapter(this, repo);
+        // Resets the list on imageadapter so that the correct ones can be shown
         imageAdapter.getImages();
 
         listView2 = (ListView) findViewById(R.id.listView2);
@@ -113,23 +116,26 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    // Home page
                     case R.id.nav_adventures:
                         finish();
                         break;
+                    // Atlas page - shows the user where they have visited
                     case R.id.nav_Atlas:
                         Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
                         break;
-                    case R.id.nav_calendar:
-                        break;
+                    // AdventureList - displays the images that the user has saved
                     case R.id.nav_images:
                         Intent intent3 = new Intent(context, AdventureList.class);
                         startActivity(intent3);
                         break;
+                    // Help page - basic how to use program
                     case R.id.nav_help:
                         Intent intent4 = new Intent(context, HelpPage.class);
                         startActivity(intent4);
                         break;
+                    // Info page - who made the app
                     case R.id.nav_info:
                         Intent intent5 = new Intent(context, AboutPage.class);
                         startActivity(intent5);
@@ -157,6 +163,10 @@ public class CalendarActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Update each item in the list so that the correct ones (the ones with the correct date) are
+     * shown
+     */
     private void updateList() {
 
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage, adventureDate,adventureLocation);
@@ -181,6 +191,11 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This resets each array in the class so that they can populated with new information.
+     * The information will be the adventure attributes (ID, note, image etc) so that they can
+     * be passed to CustomArrayAdapter and listed correctly.
+     */
     private void setArrays(){
         AdventureRepo repo = new AdventureRepo(this);
         ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();

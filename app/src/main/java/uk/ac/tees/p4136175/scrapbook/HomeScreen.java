@@ -172,9 +172,12 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
             return true;
         } else {
             switch (item.getItemId()) {
+                // If the settings button is clicked in the top right
                 case R.id.settings_id:
                     Toast.makeText(getApplicationContext(), "Settings selected", Toast.LENGTH_LONG).show();
                     return true;
+                // If the search button is clicked, hide the search button and display the noteSearch
+                // which will allow the user to enter a string to search
                 case R.id.search_id:
                     if(noteSearch.getVisibility() == View.INVISIBLE) {
                         noteSearch.setVisibility(View.VISIBLE);
@@ -183,12 +186,14 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                         noteSearch.setVisibility(View.INVISIBLE);
                         myToolbar.setLogo(R.drawable.snippetgreen);
 
+                        // If the string they enter isn't empty
                         if(!((noteSearch.getText().toString()).matches(""))) {
                             setArrays(noteSearch.getText().toString());
                         } else {
                             setArrays("");
                         }
 
+                        // Hide the keyboard
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 
@@ -216,6 +221,10 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
     }
 
+    // Update the list on the home page so that the correct adventures are shown
+    // these will be the ones whose note_text contain the search string
+    // OR
+    // Will be all the adventures (if the user searches '')
     private void updateList() {
 
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, adventureNote, adventureImage, adventureDate,adventureLocation);
@@ -248,6 +257,15 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
         setArrays("");
     }
 
+    /**
+     * This method resets each array so that they can be populated with the correct information
+     * If the method is called with an empty string "", all the adventures will be added to the
+     * arrays so that the list contains ALL adventures.
+     *
+     * If the searchCriteria is anything but empty, the entries will be filtered so that only
+     * the ones containing the searchCriteria is shown
+     * @param searchCriteria the search string
+     */
     private void setArrays(String searchCriteria){
             AdventureRepo repo = new AdventureRepo(this);
             ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();

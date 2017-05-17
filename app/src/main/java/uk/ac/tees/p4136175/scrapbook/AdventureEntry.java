@@ -12,12 +12,12 @@ public class AdventureEntry {
     // Name of the table that will be used
     public static final String TABLE = "AdventureEntryNew";
 
-    // Labels Table Column Names
-    public static final String KEY_ID = "_id";
-    public static final String KEY_note = "notetext";
-    public static final String KEY_image = "image";
-    public static final String KEY_datetime = "datetime";
-    public static final String KEY_loc_name = "loc_name";
+    // Labels Table Column Names  -               examples
+    public static final String KEY_ID = "_id"; // 1
+    public static final String KEY_note = "notetext"; // "adventure was good"
+    public static final String KEY_image = "image"; // Bitmap
+    public static final String KEY_datetime = "datetime"; // "15th May 2017"
+    public static final String KEY_loc_name = "loc_name"; // "Middlesbrough, UK"
 
     // property help us to keep data
     public int ID;

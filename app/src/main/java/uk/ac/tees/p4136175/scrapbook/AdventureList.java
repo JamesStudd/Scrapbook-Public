@@ -46,8 +46,8 @@ public class AdventureList extends AppCompatActivity implements View.OnClickList
     // Local repo to access the adventures
     AdventureRepo repo;
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
+    private DrawerLayout mDrawerLayout; // Functionality to make the nav bar slide out
+    private ActionBarDrawerToggle mToggle; // Button to make it do so
 
     //Toolbar
     Toolbar myToolbar;
@@ -80,24 +80,27 @@ public class AdventureList extends AppCompatActivity implements View.OnClickList
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    // Home page
                     case R.id.nav_adventures:
                         Intent intent3 = new Intent(context, HomeScreen.class);
                         startActivity(intent3);
                         break;
+                    // Atlas page - shows the user where they've visited
                     case R.id.nav_Atlas:
                         Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
                         break;
+                    // Calendar page - filters adventures by date
                     case R.id.nav_calendar:
                         Intent intent2 = new Intent(context, CalendarActivity.class);
                         startActivity(intent2);
                         break;
-                    case R.id.nav_images:
-                        break;
+                    // Help page - basic how to use
                     case R.id.nav_help:
                         Intent intent4 = new Intent(context, HelpPage.class);
                         startActivity(intent4);
                         break;
+                    // Info page - who the app was made by
                     case R.id.nav_info:
                         Intent intent5 = new Intent(context, AboutPage.class);
                         startActivity(intent5);
