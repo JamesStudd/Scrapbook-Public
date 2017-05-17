@@ -117,7 +117,7 @@ public class CalendarActivity extends AppCompatActivity {
                         finish();
                         break;
                     case R.id.nav_Atlas:
-                        Intent intent = new Intent(context, AtlastActivity.class);
+                        Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
                         break;
                     case R.id.nav_calendar:

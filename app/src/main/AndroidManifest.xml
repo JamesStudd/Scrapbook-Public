@@ -37,18 +37,9 @@
             android:name=".MakeAdventure"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AdventureList" />
-        <activity android:name=".ViewAdventureEntry" />
         <activity android:name=".ViewGridEntry" />
-        <activity android:name=".MapsActivity" />
-        <activity android:name=".MapSearch" />
-        <activity android:name=".MapPicker" />
         <activity android:name=".HomeScreen" />
         <activity android:name=".ViewEntryHomePage" />
-        <activity android:name=".ViewEntry" />
-        <activity
-            android:name=".AtlastActivity"
-            android:label="@string/title_activity_atlast" />
-        <activity
             android:name=".AtlasBackup"
             android:label="@string/title_activity_atlas_backup" />
         <activity android:name=".CalendarActivity" />

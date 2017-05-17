@@ -49,7 +49,7 @@ public class AboutPage extends AppCompatActivity {
                         startActivity(intent3);
                         break;
                     case R.id.nav_Atlas:
-                        Intent intent = new Intent(context, AtlastActivity.class);
+                        Intent intent = new Intent(context, AtlasBackup.class);
                         startActivity(intent);
                         break;
                     case R.id.nav_calendar:
