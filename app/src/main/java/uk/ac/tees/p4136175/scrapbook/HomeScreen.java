@@ -47,11 +47,7 @@ import java.util.List;
 public class HomeScreen extends AppCompatActivity implements android.view.View.OnClickListener {
 
     // btnAdd = Make Adventure
-    // btnList = List adventures
-    // btnSearch = Bring up the calendar/noteSearch
-    // btnFind = Search when a note is typed in
-    Button btnList, btnSearch;
-    ImageButton btnAdd, btnFind;
+    ImageButton btnAdd;
 
     // List view and ID for the adventure
     ListView listView;
@@ -134,10 +130,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_home_screen);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
-
-        btnFind = (ImageButton) findViewById(R.id.findButton);
-        btnFind.setVisibility(View.INVISIBLE);
-        btnFind.setOnClickListener(this);
 
         calendarView = (CalendarView) findViewById(R.id.calendarView3);
         calendarView.setVisibility(View.INVISIBLE);
@@ -237,11 +229,15 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
                         noteSearch.setVisibility(View.INVISIBLE);
                         myToolbar.setLogo(R.drawable.snippetgreen);
 
-                        Intent intent = new Intent(context, AdventureList.class);
-                        Bundle b = new Bundle();
-                        b.putString("note", noteSearch.getText().toString());
-                        intent.putExtras(b);
-                        startActivity(intent);
+                        if(!((noteSearch.getText().toString()).matches(""))) {
+                            Intent intent = new Intent(context, AdventureList.class);
+                            Bundle b = new Bundle();
+                            b.putString("note", noteSearch.getText().toString());
+                            intent.putExtras(b);
+                            noteSearch.setText("");
+                            startActivity(intent);
+                        }
+
                     }
                     return true;
             }
@@ -296,24 +292,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
      * Animates the 'Make Adventure' button as well as removing
      * the left arrow, right arrow and the calendar
      */
-    public void startCalendarAnimation() {
-        if (calendarShown) {
-
-            calendarView.setVisibility(View.INVISIBLE);
-            leftArrow.setVisibility(View.INVISIBLE);
-            rightArrow.setVisibility(View.INVISIBLE);
-        } else {
-            calendarView.setVisibility(View.VISIBLE);
-            leftArrow.setVisibility(View.VISIBLE);
-            rightArrow.setVisibility(View.VISIBLE);
-        }
-        // Set calendarShown = not calendarShown (true to false, false to true)
-        calendarShown = !calendarShown;
-        // Make the find button and note search invisible
-        btnFind.setVisibility(View.INVISIBLE);
-        noteSearch.setVisibility(View.INVISIBLE);
-
-    }
 
 
     /**
@@ -321,20 +299,6 @@ public class HomeScreen extends AppCompatActivity implements android.view.View.O
      *
      * @param state will either be '0' or '1', 0 = calendar, 1 = note
      */
-    public void showWayOfSearching(int state) {
-        switch (state) {
-            case 0: // Calendar
-                calendarView.setVisibility(View.VISIBLE);
-                noteSearch.setVisibility(View.INVISIBLE);
-                btnFind.setVisibility(View.INVISIBLE);
-                break;
-            case 1: // Note
-                calendarView.setVisibility(View.INVISIBLE);
-                noteSearch.setVisibility(View.VISIBLE);
-                btnFind.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
 
     private void updateList() {
 
