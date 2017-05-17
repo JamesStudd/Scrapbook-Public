@@ -53,6 +53,7 @@
             android:label="@string/title_activity_atlas_backup"></activity>
         <activity android:name=".CalendarActivity" />
         <activity android:name=".HelpPage"></activity>
+
     </application>
 
 </manifest>
