@@ -3,7 +3,10 @@ package uk.ac.tees.p4136175.scrapbook;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,10 +19,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,13 +45,17 @@ public class CalendarActivity extends AppCompatActivity {
     String[] adventureLocation;
     int[] adventureIdArray;
     ImageAdapter imageAdapter;
+    CalendarView calendarView;
     AdventureRepo repo;
+    Date date;
+    String chosenDate;
 
 
 
     // This class
     final Context context = this;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +67,34 @@ public class CalendarActivity extends AppCompatActivity {
         imageAdapter.getImages();
 
         listView2 = (ListView) findViewById(R.id.listView2);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        date = new Date();
+        chosenDate = dateFormat.format(date);
+
+        calendarView = (CalendarView) findViewById(R.id.calendarView4);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            /**
+             * If the date is selected on a callender
+             * @param view Calendar in use
+             * @param year Year selected
+             * @param month Month selected
+             * @param dayOfMonth Day selected
+             */
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                // Used to convert the month to a 3 letter representation to store in the DB
+                String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+                // Concatenate a string using the day, month and year
+                chosenDate = dayOfMonth + " " + monthNames[month] + " " + year;
+
+                // Update arrays and list
+                setArrays();
+
+            }
+        });
 
         setArrays();
 
@@ -137,17 +174,26 @@ public class CalendarActivity extends AppCompatActivity {
     private void setArrays(){
         AdventureRepo repo = new AdventureRepo(this);
         ArrayList<HashMap<String, String>> adventureList = repo.getAdventureEntryList();
+        ArrayList<HashMap<String, String>> adventureListWithCorrectDates = new ArrayList<HashMap<String, String>>();
 
+        for (HashMap<String, String> h : adventureList){
+            String s = h.get("datetime");
+            if(chosenDate.equals(s)){
+                adventureListWithCorrectDates.add(h);
+            }
+        }
 
-        adventureNote = new String[adventureList.size()];
-        adventureImage = new Bitmap[adventureList.size()];
-        adventureDate = new String[adventureList.size()];
-        adventureLocation = new String[adventureList.size()];
+        int sizeOfArray = adventureListWithCorrectDates.size();
+
+        adventureNote = new String[sizeOfArray];
+        adventureImage = new Bitmap[sizeOfArray];
+        adventureDate = new String[sizeOfArray];
+        adventureLocation = new String[sizeOfArray];
         // Create an array the same size as the current adventure list size
-        adventureIdArray = new int[adventureList.size()];
+        adventureIdArray = new int[sizeOfArray];
         int count = 0;
         // For each hashmap, get the ID of the entry and save it into the array just created
-        for(HashMap<String, String> h : adventureList){
+        for(HashMap<String, String> h : adventureListWithCorrectDates){
             adventureIdArray[count] = Integer.parseInt(String.valueOf(h.get("id")));
             count++;
         }
@@ -160,7 +206,7 @@ public class CalendarActivity extends AppCompatActivity {
 
 
         for (int i = 0; i <adventureNote.length ; i ++){
-            HashMap<String, String> t = adventureList.get(i);
+            HashMap<String, String> t = adventureListWithCorrectDates.get(i);
             adventureNote[i] = t.get("note_text");
             adventureDate[i] = t.get("datetime");
             adventureLocation[i] = t.get("location");
